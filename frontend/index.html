@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReuniteAI – AI-Powered Lost Person & Family Reunification Platform</title>
+  <meta name="description" content="Official AI-powered lost person, medical emergency, and family reunification platform for Jagannath Rath Yatra and Wari Pilgrimage.">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <style>
+    .hero-section {
+      text-align: center;
+      padding: 4.5rem 1rem 2.5rem 1rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .hero-title {
+      font-size: 3.2rem;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      background: linear-gradient(135deg, #ffffff 30%, var(--color-accent-gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .role-card {
+      padding: 1.75rem;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+    .role-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--color-primary);
+    }
+    .role-badge-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--color-accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+    .module-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .module-card:hover {
+      background: rgba(79, 70, 229, 0.1);
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+    .module-num {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--color-accent-gold);
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+    .module-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      color: #fff;
+    }
+    .module-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+    .demo-bar {
+      background: rgba(79, 70, 229, 0.15);
+      border: 1px solid rgba(79, 70, 229, 0.35);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.5rem;
+      margin: 2rem auto;
+      max-width: 850px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+
+  <!-- Header -->
+  <header style="padding: 1.25rem 0; border-bottom: 1px solid var(--bg-card-border); position: sticky; top: 0; background: rgba(10, 14, 26, 0.85); backdrop-filter: blur(12px); z-index: 100;">
+    <div class="container d-flex align-center justify-between">
+      <a href="index.html" class="brand-logo">
+        <div class="brand-icon">🚩</div>
+        <div class="brand-text">Reunite<span>AI</span></div>
+      </a>
+      <div class="d-flex align-center gap-2">
+        <a href="#modules" class="btn btn-secondary" style="font-size:0.85rem; padding:0.5rem 1rem;">All Modules</a>
+        <a href="login.html" class="btn btn-secondary" style="font-size:0.85rem; padding:0.5rem 1rem;">Sign In</a>
+        <a href="register.html" class="btn btn-primary" style="font-size:0.85rem; padding:0.5rem 1.1rem;">Register Account</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <main class="container">
+    <section class="hero-section">
+      <div style="display:inline-block; padding:0.4rem 1.1rem; background:rgba(245, 158, 11, 0.15); border:1px solid rgba(245,158,11,0.3); border-radius:99px; color:var(--color-accent-gold); font-size:0.85rem; font-weight:600; margin-bottom:1rem;">
+        🙏 Case Study: Jagannath Rath Yatra & Alandi-Pandharpur Wari
+      </div>
+      <h1 class="hero-title">AI-Powered Lost Person & Family Reunification</h1>
+      <p class="hero-subtitle">
+        A static-ready, zero-dependency smart infrastructure engineered to reunite missing pilgrims, children, and elderly citizens using multi-agency coordination, ground volunteers, and weighted similarity matching.
+      </p>
+
+      <!-- Instant 1-Click Role Login Bar -->
+      <div class="demo-bar">
+        <div>
+          <div style="font-weight: 700; font-size: 0.95rem; color: #fff;">⚡ 1-Click Instant Demo Launch</div>
+          <div style="font-size: 0.8rem; color: var(--text-secondary);">Select any role to test the platform instantly:</div>
+        </div>
+        <div class="d-flex gap-1" style="flex-wrap: wrap;">
+          <button class="btn btn-sm btn-primary" onclick="Auth.loginAsDemo('VOLUNTEER')">🤝 Volunteer</button>
+          <button class="btn btn-sm btn-secondary" onclick="Auth.loginAsDemo('PARENT_GUARDIAN')">👨‍👩‍👧 Parent</button>
+          <button class="btn btn-sm btn-secondary" onclick="Auth.loginAsDemo('POLICE_OFFICER')">👮 Police</button>
+          <button class="btn btn-sm btn-secondary" onclick="Auth.loginAsDemo('MEDICAL_STAFF')">🩺 Medical</button>
+          <button class="btn btn-sm btn-secondary" onclick="Auth.loginAsDemo('SUPER_ADMIN')">🏛️ Admin</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Roles Matrix -->
+    <h2 style="text-align:center; margin-top:2.5rem; font-size:1.8rem;">Multi-Role Infrastructure</h2>
+    <p style="text-align:center; color:var(--text-secondary); max-width:650px; margin:0.5rem auto 1.5rem auto;">
+      Role-Based Access Control (RBAC) connecting 7 distinct stakeholder channels with specialized workbenches:
+    </p>
+
+    <div class="roles-grid">
+      <div class="glass-card role-card">
+        <div>
+          <div class="role-badge-tag">Self-Registration</div>
+          <h3>👨‍👩‍👧 Parent / Guardian</h3>
+          <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.5rem;">
+            Register family members, create missing reports, receive instant notification updates upon visual match verification.
+          </p>
+        </div>
+        <div style="margin-top:1.5rem;">
+          <button class="btn btn-sm btn-primary btn-block" onclick="Auth.loginAsDemo('PARENT_GUARDIAN')">
+            Enter Parent Portal →
+          </button>
+        </div>
+      </div>
+
+      <div class="glass-card role-card">
+        <div>
+          <div class="role-badge-tag">Verification Required</div>
+          <h3>🤝 Ground Volunteer</h3>
+          <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.5rem;">
+            Deploy in crowd sectors, accept tasks, mark attendance, log found individuals at help booths.
+          </p>
+        </div>
+        <div style="margin-top:1.5rem;">
+          <button class="btn btn-sm btn-primary btn-block" onclick="Auth.loginAsDemo('VOLUNTEER')">
+            Enter Volunteer Console →
+          </button>
+        </div>
+      </div>
+
+      <div class="glass-card role-card">
+        <div>
+          <div class="role-badge-tag">Law Enforcement</div>
+          <h3>👮 Police Officer</h3>
+          <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.5rem;">
+            Manage missing person verification, review high-confidence AI matches, direct search operations.
+          </p>
+        </div>
+        <div style="margin-top:1.5rem;">
+          <button class="btn btn-sm btn-primary btn-block" onclick="Auth.loginAsDemo('POLICE_OFFICER')">
+            Enter Police Station →
+          </button>
+        </div>
+      </div>
+
+      <div class="glass-card role-card">
+        <div>
+          <div class="role-badge-tag">First Responders</div>
+          <h3>🩺 Medical Staff</h3>
+          <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.5rem;">
+            Log emergency admissions, triage clinical treatments, dispatch ambulances along yatra route.
+          </p>
+        </div>
+        <div style="margin-top:1.5rem;">
+          <button class="btn btn-sm btn-primary btn-block" onclick="Auth.loginAsDemo('MEDICAL_STAFF')">
+            Enter Medical Desk →
+          </button>
+        </div>
+      </div>
+
+      <div class="glass-card role-card">
+        <div>
+          <div class="role-badge-tag">Kiosks & Booths</div>
+          <h3>🎧 Help Center Operator</h3>
+          <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.5rem;">
+            Operate temple control room kiosks, assist offline pilgrims, process custody returns.
+          </p>
+        </div>
+        <div style="margin-top:1.5rem;">
+          <button class="btn btn-sm btn-primary btn-block" onclick="Auth.loginAsDemo('HELP_CENTER_OPERATOR')">
+            Enter Help Center →
+          </button>
+        </div>
+      </div>
+
+      <div class="glass-card role-card">
+        <div>
+          <div class="role-badge-tag">Command Center</div>
+          <h3>🏛️ Event / Super Admin</h3>
+          <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.5rem;">
+            Approve pending staff, inspect audit trails, monitor system health and AI match performance.
+          </p>
+        </div>
+        <div style="margin-top:1.5rem;">
+          <button class="btn btn-sm btn-primary btn-block" onclick="Auth.loginAsDemo('SUPER_ADMIN')">
+            Enter Admin Control →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Modules Navigator -->
+    <section id="modules" style="margin-top: 5rem; padding-top: 2rem; border-top: 1px solid var(--bg-card-border);">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <h2 style="font-size: 1.8rem;">All 10 Platform Modules</h2>
+        <p style="color: var(--text-secondary);">Direct links to all integrated subsystems and workbenches:</p>
+      </div>
+
+      <div class="modules-grid">
+        <a href="admin/users.html" class="module-card">
+          <div class="module-num">Module 01</div>
+          <div class="module-title">User & Role Management</div>
+          <div class="module-desc">7 User Roles, Session Tokens, Approval Queues & Security Audit Logs.</div>
+        </a>
+
+        <a href="family/family-dashboard.html" class="module-card">
+          <div class="module-num">Module 02</div>
+          <div class="module-title">Family & Person Profiles</div>
+          <div class="module-desc">Family Groups, 6-Step Registration Wizard, Safety IDs & RFID tracking.</div>
+        </a>
+
+        <a href="medical/my-medical-cases.html" class="module-card">
+          <div class="module-num">Module 03</div>
+          <div class="module-title">Medical Emergency Help</div>
+          <div class="module-desc">Emergency Cases, Priority Engine, Medical Camps & Ambulance Dispatch.</div>
+        </a>
+
+        <a href="lost-person/my-lost-cases.html" class="module-card">
+          <div class="module-num">Module 04</div>
+          <div class="module-title">Lost Person Assistance</div>
+          <div class="module-desc">Missing Person Reporting, Priority Engine, Sightings & Volunteer Support.</div>
+        </a>
+
+        <a href="found-person/found-person-cases.html" class="module-card">
+          <div class="module-num">Module 05</div>
+          <div class="module-title">Found Person & Custody</div>
+          <div class="module-desc">Found Person Registry, Safe Custody Centers, Verification & Reunification.</div>
+        </a>
+
+        <a href="lost-items/my-lost-items.html" class="module-card">
+          <div class="module-num">Module 06</div>
+          <div class="module-title">Lost & Found Items</div>
+          <div class="module-desc">14 Item Categories, Locker Tracking, Owner Claims & Handover Proof.</div>
+        </a>
+
+        <a href="ai/dashboard.html" class="module-card">
+          <div class="module-num">Module 07</div>
+          <div class="module-title">AI Matching Engine</div>
+          <div class="module-desc">Biometric Similarity, Explainability Bullets & Decision Support Desk.</div>
+        </a>
+
+        <a href="dindi/directory.html" class="module-card">
+          <div class="module-num">Module 08</div>
+          <div class="module-title">Dindi Group Coordination</div>
+          <div class="module-desc">Warkari Dindis, Leader Rosters, Rest Schedules & Broadcast Announcements.</div>
+        </a>
+
+        <a href="map/wari-map.html" class="module-card">
+          <div class="module-num">Module 09</div>
+          <div class="module-title">Route Map & Congestion</div>
+          <div class="module-desc">Interactive Route Map, Checkpoints, Emergency Zones & Nearby Services.</div>
+        </a>
+
+        <a href="volunteer/dashboard.html" class="module-card">
+          <div class="module-num">Module 10</div>
+          <div class="module-title">Volunteer Management</div>
+          <div class="module-desc">Registration, Shift Attendance, Task Recommendation & Duty Desk.</div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer style="margin-top:5rem; padding:2.5rem 0; border-top:1px solid var(--bg-card-border); text-align:center; color:var(--text-muted); font-size:0.875rem;">
+    <div class="container d-flex justify-between align-center" style="flex-wrap: wrap; gap: 1rem;">
+      <div>&copy; 2026 ReuniteAI Platform. Built for Pilgrimage Welfare & Safety.</div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-sm btn-secondary" onclick="if(window.StaticMockDB){StaticMockDB.reset(); alert('Demo data reset to default seed!'); location.reload();}">
+          🔄 Reset Demo Data
+        </button>
+        <a href="login.html" class="btn btn-sm btn-primary">Login</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/auth.js"></script>
+</body>
+</html>

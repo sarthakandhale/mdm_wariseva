@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Found Item Registered – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <div class="main-wrapper" style="margin-left:0; width:100%;">
+      <main class="dashboard-content" style="padding-top:4rem;">
+        <div style="max-width: 650px; margin: 0 auto; text-align: center;">
+          <div class="glass-card" style="padding: 3rem; border-top: 5px solid var(--color-success);">
+            <div style="font-size:4rem; margin-bottom:1rem;">🟢</div>
+            <h2 style="font-size:1.8rem; margin-bottom:0.5rem;">Found Item Registered & Stored</h2>
+            <p style="color:var(--text-secondary); margin-bottom:1.5rem;">
+              The found physical belonging has been cataloged and placed into secure storage custody.
+            </p>
+
+            <div id="foundItemSummaryBox" style="padding:1.25rem; background:rgba(15,23,42,0.8); border:1px solid var(--bg-card-border); border-radius:var(--radius-md); text-align:left; margin-bottom:2rem;"></div>
+
+            <div class="d-flex justify-center gap-3">
+              <a href="../found-items/found-items.html" class="btn btn-primary">Found Items Catalog</a>
+              <a href="../storage/dashboard.html" class="btn btn-secondary">Storage Custody Console</a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function loadSuccessSummary() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const caseId = urlParams.get('case_id');
+      if (!caseId) return;
+
+      const res = await APIClient.get(`/api/found-items/${caseId}`);
+      if (res.success) {
+        const c = res.data;
+        const box = document.getElementById('foundItemSummaryBox');
+        box.innerHTML = `
+          <div style="font-size:0.9rem; display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+            <div><span style="color:var(--text-muted)">Case Number:</span> <strong style="font-family:monospace;">${c.case_number}</strong></div>
+            <div><span style="color:var(--text-muted)">Category:</span> <strong>${c.item_category}</strong></div>
+            <div><span style="color:var(--text-muted)">Item Name:</span> <strong>${c.item_name}</strong></div>
+            <div><span style="color:var(--text-muted)">Status:</span> <span class="badge badge-active">${c.status}</span></div>
+          </div>
+        `;
+      }
+    }
+    loadSuccessSummary();
+  </script>
+</body>
+</html>

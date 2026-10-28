@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volunteer Portal – ReuniteAI</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Reunite<span>AI</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../dashboard/volunteer.html">🤝 Duty Console Overview</a></li>
+        <li class="sidebar-item"><a href="../volunteer/dashboard.html">📋 Active Assigned Tasks</a></li>
+        <li class="sidebar-item"><a href="../found-person/report-found.html">📷 Report Found Person</a></li>
+        <li class="sidebar-item"><a href="../found-person/found-person-cases.html">🏢 Safe Custody Directory</a></li>
+        <li class="sidebar-item"><a href="../lost-person/report-lost.html">🚨 File Missing Report</a></li>
+        <li class="sidebar-item"><a href="../found-items/report-found-item.html">🎒 Report Found Item</a></li>
+        <li class="sidebar-item"><a href="../found-items/found-items.html">📦 Found Items Directory</a></li>
+        <li class="sidebar-item"><a href="../medical/report-emergency.html">🏥 Medical Assistance</a></li>
+        <li class="sidebar-item"><a href="../map/wari-map.html">🗺️ Sector Route Map</a></li>
+        <li class="sidebar-item"><a href="../profile.html">👤 My Profile</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Ground Volunteer Operations Console</h3>
+        </div>
+        <div class="navbar-right">
+          <div class="user-profile-btn" onclick="window.location.href="../profile.html"">
+            <div class="avatar-circle" id="navUserAvatar">V</div>
+            <div>
+              <div id="navUserName" style="font-weight:600;font-size:0.875rem;">Volunteer User</div>
+              <div id="navUserRole" style="font-size:0.75rem;color:var(--color-accent-gold);">VOLUNTEER</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div class="stat-grid">
+          <div class="glass-card stat-card">
+            <div class="stat-header"><span>Shift Duty Status</span><div class="stat-icon">📍</div></div>
+            <div class="stat-value">Active Duty</div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-header"><span>Found Persons Logged</span><div class="stat-icon">📷</div></div>
+            <div class="stat-value">Active</div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-header"><span>Assigned Tasks</span><div class="stat-icon">📋</div></div>
+            <div class="stat-value">Assigned</div>
+          </div>
+        </div>
+
+        <h3 style="margin-bottom: 1rem;">Volunteer Field Assistance Tools</h3>
+        <div class="placeholder-grid">
+          <div class="glass-card module-card">
+            <h4>📋 Duty Check-In & Task Desk</h4>
+            <p>Check in for duty shifts, accept assigned sector tasks, and submit task progress / completion reports.</p>
+            <div style="margin-top:1rem;">
+              <a href="../volunteer/dashboard.html" class="btn btn-primary btn-sm">Open Duty Console</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>📷 Report Found Person</h4>
+            <p>Log a lost child or elder found in crowd, enter current booth location, clothing, and safe custody placement.</p>
+            <div style="margin-top:1rem;">
+              <a href="../found-person/report-found.html" class="btn btn-success btn-sm">Report Found Person</a>
+              <a href="../found-person/found-person-cases.html" class="btn btn-secondary btn-sm">View Directory</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🚨 File Missing Person Alert</h4>
+            <p>Assist non-smartphone pilgrims at help booths by submitting missing person reports directly to police control.</p>
+            <div style="margin-top:1rem;">
+              <a href="../lost-person/report-lost.html" class="btn btn-danger btn-sm">File Missing Report</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🎒 Report Found Property</h4>
+            <p>Register recovered items (bags, phones, wallets) found in sector zones and assign to custody lockers.</p>
+            <div style="margin-top:1rem;">
+              <a href="../found-items/report-found-item.html" class="btn btn-primary btn-sm">Report Found Item</a>
+              <a href="../found-items/found-items.html" class="btn btn-secondary btn-sm">View Found Items</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🏥 Medical Emergency Triage</h4>
+            <p>File emergency medical assistance requests, alert nearby ambulance units, or direct pilgrims to medical tents.</p>
+            <div style="margin-top:1rem;">
+              <a href="../medical/report-emergency.html" class="btn btn-warning btn-sm">Report Medical Case</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🗺️ Sector Map & Service Points</h4>
+            <p>View interactive map of your sector, locate nearby police posts, medical camps, and help booths.</p>
+            <div style="margin-top:1rem;">
+              <a href="../map/wari-map.html" class="btn btn-primary btn-sm">Open Interactive Map</a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>Auth.requireAuth(['VOLUNTEER', 'SUPER_ADMIN']);</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Family Console – ReuniteAI</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Reunite<span>AI</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../family/family-dashboard.html">👨‍👩‍👧 My Family & Members</a></li>
+        <li class="sidebar-item"><a href="../dashboard/parent.html">📋 Parent Overview</a></li>
+        <li class="sidebar-item"><a href="../profile.html">👤 My Profile</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Family & Person Profile Control Center</h3>
+        </div>
+        <div class="navbar-right">
+          <div class="user-profile-btn" onclick="window.location.href="../profile.html"">
+            <div class="avatar-circle" id="navUserAvatar">P</div>
+            <div>
+              <div id="navUserName" style="font-weight:600;font-size:0.875rem;">Parent User</div>
+              <div id="navUserRole" style="font-size:0.75rem;color:var(--color-accent-gold);">PARENT / GUARDIAN</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div class="d-flex justify-between align-center" style="margin-bottom: 1.5rem;">
+          <div>
+            <h2>Registered Family Groups</h2>
+            <p style="color:var(--text-secondary);font-size:0.9rem;">Manage members, clothing descriptions, and emergency contacts for Puri Rath Yatra</p>
+          </div>
+          <a href="../family/create-family.html" class="btn btn-primary">+ Create New Family Group</a>
+        </div>
+
+        <!-- Dynamic Container loaded by family.js -->
+        <div id="familyDashboardContainer"></div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/family.js"></script>
+  <script>
+    Auth.requireAuth();
+  </script>
+</body>
+</html>

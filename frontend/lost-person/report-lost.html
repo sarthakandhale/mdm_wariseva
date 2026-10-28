@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Lost Person – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Wari<span>Seva</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../lost-person/report-lost.html">🚨 Report Lost Person</a></li>
+        <li class="sidebar-item"><a href="../lost-person/my-lost-cases.html">📋 My Lost Cases</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Lost Person Reporting Wizard</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div style="max-width: 780px; margin: 0 auto;" id="reportLostWizardContainer">
+          
+          <div class="glass-card" style="padding: 2.25rem; border-top: 4px solid var(--color-accent-crimson);">
+            <h2 style="font-size:1.5rem; margin-bottom:0.5rem;">Report Missing Warkari / Family Member</h2>
+            <p style="color:var(--text-secondary); font-size:0.875rem; margin-bottom:1.5rem;">
+              Select registered family member or report an unregistered pilgrim. System checks for duplicate active cases and calculates priority score.
+            </p>
+
+            <form id="reportLostForm" onsubmit="handleReportLostSubmit(event)">
+              
+              <!-- STEP 1: Select Family & Person -->
+              <div id="reportWizardStep1">
+                <h4 style="margin-bottom:0.75rem; border-bottom:1px solid var(--bg-card-border); padding-bottom:0.4rem;">Step 1: Select Family & Member</h4>
+                <div class="form-group">
+                  <label class="form-label" for="lostFamilySelect">Select Family Group *</label>
+                  <select id="lostFamilySelect" class="form-select" onchange="loadMembersForSelectedFamily(this.value)"></select>
+                </div>
+
+                <div style="margin-bottom:1.5rem;">
+                  <label class="form-label">Select Active Family Member to Report Lost *</label>
+                  <div id="familyMembersGrid" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:0.5rem;"></div>
+                </div>
+              </div>
+
+              <!-- STEP 2: Last Seen Details & Clothing -->
+              <div id="reportWizardStep2" style="display:none;">
+                <div style="padding:0.75rem 1rem; background:rgba(79,70,229,0.15); border:1px solid var(--color-primary); border-radius:var(--radius-md); margin-bottom:1.25rem;">
+                  Selected Person: <strong id="verifyName" style="color:var(--color-primary);">Name</strong> (<span id="verifyAgeCat">Age</span>)
+                </div>
+
+                <h4 style="margin-bottom:0.75rem; border-bottom:1px solid var(--bg-card-border); padding-bottom:0.4rem;">Step 2: Last Seen Time & Location</h4>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="form-group">
+                    <label class="form-label" for="lastSeenDate">Last Seen Date *</label>
+                    <input type="date" id="lastSeenDate" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="lastSeenTime">Last Seen Time *</label>
+                    <input type="time" id="lastSeenTime" class="form-control" required>
+                  </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="form-group">
+                    <label class="form-label" for="lostZone">Wari Route Zone *</label>
+                    <select id="lostZone" class="form-select" required>
+                      <option value="Alandi">Alandi</option>
+                      <option value="Pune Route">Pune Route</option>
+                      <option value="Saswad" selected>Saswad</option>
+                      <option value="Jejuri">Jejuri</option>
+                      <option value="Lonand">Lonand</option>
+                      <option value="Phaltan">Phaltan</option>
+                      <option value="Malshiras">Malshiras</option>
+                      <option value="Pandharpur">Pandharpur</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="lostLandmark">Landmark / Rest Stop</label>
+                    <input type="text" id="lostLandmark" class="form-control" placeholder="e.g. Near Saswad Rest Stop Water Tank 3">
+                  </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="form-group">
+                    <label class="form-label" for="lostRouteSection">Route Section</label>
+                    <input type="text" id="lostRouteSection" class="form-control" value="Alandi-Pandharpur Dindi Route">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="reporterRel">Your Relationship to Person *</label>
+                    <input type="text" id="reporterRel" class="form-control" placeholder="e.g. Father, Mother, Guardian" required>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="lostLocDesc">Location Description</label>
+                  <input type="text" id="lostLocDesc" class="form-control" placeholder="e.g. Disappeared near food distribution stall">
+                </div>
+
+                <h4 style="margin-top:1.5rem; margin-bottom:0.75rem; border-bottom:1px solid var(--bg-card-border); padding-bottom:0.4rem;">Step 3: Clothing at Last Sighting</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="form-group">
+                    <label class="form-label" for="lostTopType">Top Wear</label>
+                    <input type="text" id="lostTopType" class="form-control" placeholder="e.g. T-Shirt, Kurta">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="lostTopColor">Top Wear Color</label>
+                    <input type="text" id="lostTopColor" class="form-control" placeholder="e.g. Bright Red">
+                  </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="form-group">
+                    <label class="form-label" for="lostBottomType">Bottom Wear</label>
+                    <input type="text" id="lostBottomType" class="form-control" placeholder="e.g. Shorts, Pajama">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="lostBottomColor">Bottom Wear Color</label>
+                    <input type="text" id="lostBottomColor" class="form-control" placeholder="e.g. Navy Blue">
+                  </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="form-group">
+                    <label class="form-label" for="lostFootwear">Footwear</label>
+                    <input type="text" id="lostFootwear" class="form-control" placeholder="e.g. Sandals, Sneakers">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="lostFootwearColor">Footwear Color</label>
+                    <input type="text" id="lostFootwearColor" class="form-control" placeholder="e.g. Brown">
+                  </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="form-group">
+                    <label class="form-label" for="lostHeadwear">Headwear / Cap</label>
+                    <input type="text" id="lostHeadwear" class="form-control" placeholder="e.g. Yellow Cap">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="lostAccessories">Accessories / Bag</label>
+                    <input type="text" id="lostAccessories" class="form-control" placeholder="e.g. Carrying small blue backpack">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="lostNotes">Additional Disappearance Notes</label>
+                  <textarea id="lostNotes" class="form-control" rows="2" placeholder="Mention any extra details..."></textarea>
+                </div>
+
+                <div class="d-flex justify-between align-center" style="margin-top: 1.75rem;">
+                  <button type="button" class="btn btn-secondary" onclick="document.getElementById('reportWizardStep2').style.display='none'; document.getElementById('reportWizardStep1').style.display='block';">← Back</button>
+                  <button type="submit" id="submitLostBtn" class="btn btn-danger" style="padding:0.8rem 2rem;">🚨 SUBMIT MISSING PERSON ALERT</button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/lost-person.js"></script>
+  <script>
+    Auth.requireAuth();
+    // Set today's date default
+    const today = new Date().toISOString().split('T')[0];
+    const dateInput = document.getElementById('lastSeenDate');
+    if (dateInput) dateInput.value = today;
+  </script>
+</body>
+</html>

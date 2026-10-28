@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Medical Emergency – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <style>
+    .patient-card-option {
+      cursor: pointer;
+      border: 2px solid var(--bg-card-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    .patient-card-option:hover {
+      border-color: var(--color-primary);
+    }
+    .patient-card-option.active-mode {
+      border-color: var(--color-primary);
+      background: rgba(79, 70, 229, 0.15);
+      box-shadow: 0 0 15px rgba(79, 70, 229, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚑</div>
+          <div class="brand-text">Wari<span>Seva</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../medical/report-emergency.html">🚨 Report Emergency</a></li>
+        <li class="sidebar-item"><a href="../medical/my-medical-cases.html">📋 My Medical Cases</a></li>
+        <li class="sidebar-item"><a href="../medical/nearby-medical-help.html">🏥 Nearby Medical Camps</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3 style="color:var(--color-accent-crimson);">🚨 Wari Medical Emergency Assistance</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div style="max-width: 760px; margin: 0 auto;" id="medicalReportWizard">
+          
+          <div class="glass-card" style="padding: 2.25rem; border-top: 4px solid var(--color-accent-crimson);">
+            <div class="d-flex justify-between align-center" style="margin-bottom: 1.25rem;">
+              <h2>Report Medical Emergency</h2>
+              <span class="badge badge-rejected" style="font-size:0.85rem;">EMERGENCY WORKFLOW</span>
+            </div>
+            <p style="color:var(--text-secondary); font-size:0.875rem; margin-bottom: 1.75rem;">
+              Fill emergency details quickly. The system automatically calculates medical priority score and dispatches nearby ambulances and medical camps along the Alandi–Pandharpur Dindi route.
+            </p>
+
+            <form id="emergencyReportForm" onsubmit="handleEmergencyReportSubmit(event)">
+              
+              <!-- STEP 1: Patient Selection -->
+              <h4 style="margin-bottom: 0.75rem; border-bottom: 1px solid var(--bg-card-border); padding-bottom: 0.4rem;">Step 1: Patient Selection</h4>
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <div class="patient-card-option active-mode" id="modeSelfCard" onclick="selectPatientMode('SELF')">
+                  <div style="font-size:1.8rem;">👤</div>
+                  <div style="font-weight:700;margin-top:0.3rem;">Self</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Logged in user</div>
+                </div>
+
+                <div class="patient-card-option" id="modeFamilyCard" onclick="selectPatientMode('FAMILY')">
+                  <div style="font-size:1.8rem;">👨‍👩‍👧</div>
+                  <div style="font-weight:700;margin-top:0.3rem;">Family Member</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">From Module 2</div>
+                </div>
+
+                <div class="patient-card-option" id="modeUnidentifiedCard" onclick="selectPatientMode('UNIDENTIFIED')">
+                  <div style="font-size:1.8rem;">❓</div>
+                  <div style="font-weight:700;margin-top:0.3rem;">Other Person</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Unidentified Pilgrim</div>
+                </div>
+              </div>
+
+              <!-- Family Select Dropdown -->
+              <div class="form-group" id="familySelectionBox" style="display:none;">
+                <label class="form-label" for="familyMemberSelect">Select Family Member *</label>
+                <select id="familyMemberSelect" class="form-select"></select>
+              </div>
+
+              <!-- Unidentified Patient Fields -->
+              <div id="unidentifiedFormBox" style="display:none; padding:1.25rem; background:rgba(15,23,42,0.8); border:1px solid var(--bg-card-border); border-radius:var(--radius-md); margin-bottom:1.5rem;">
+                <div style="font-size:0.8rem; color:var(--color-accent-gold); margin-bottom:0.75rem;">
+                  ℹ️ System will generate temporary patient identifier (e.g. TEMP-PAT-2026-00001). Permanent profile is NOT automatically created.
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="form-group">
+                    <label class="form-label" for="tempName">Name (If Known)</label>
+                    <input type="text" id="tempName" class="form-control" placeholder="e.g. Unknown Warkari or Ramesh">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="tempAge">Approximate Age</label>
+                    <input type="number" id="tempAge" class="form-control" placeholder="e.g. 55">
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="form-group">
+                    <label class="form-label" for="tempGender">Gender</label>
+                    <select id="tempGender" class="form-select">
+                      <option value="MALE">Male</option>
+                      <option value="FEMALE">Female</option>
+                      <option value="OTHER">Other</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="tempDesc">Physical Description</label>
+                    <input type="text" id="tempDesc" class="form-control" placeholder="e.g. Wearing white kurta and green turban">
+                  </div>
+                </div>
+              </div>
+
+              <!-- STEP 2: Emergency Category & Severity -->
+              <h4 style="margin-top:1.5rem; margin-bottom: 0.75rem; border-bottom: 1px solid var(--bg-card-border); padding-bottom: 0.4rem;">Step 2: Emergency Details</h4>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="medEmergencyType">Emergency Category *</label>
+                  <select id="medEmergencyType" class="form-select" required>
+                    <option value="CHEST_PAIN">Chest Pain (High Priority)</option>
+                    <option value="BREATHING_DIFFICULTY">Breathing Difficulty (High Priority)</option>
+                    <option value="FAINTING">Unconsciousness / Fainting</option>
+                    <option value="ACCIDENT">Accident / Severe Injury</option>
+                    <option value="DEHYDRATION">Dehydration</option>
+                    <option value="HEAT_EXHAUSTION">Heat Exhaustion</option>
+                    <option value="FRACTURE">Fracture / Bone Injury</option>
+                    <option value="ALLERGIC_REACTION">Allergic Reaction</option>
+                    <option value="MEDICINE_REQUIRED">Urgent Medicine Requirement</option>
+                    <option value="SEVERE_FATIGUE">Severe Fatigue / Exhaustion</option>
+                    <option value="OTHER">Other Medical Emergency</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="medSeverity">Reported Severity *</label>
+                  <select id="medSeverity" class="form-select" required>
+                    <option value="CRITICAL">Critical (Life Threatening)</option>
+                    <option value="HIGH">High (Urgent)</option>
+                    <option value="MEDIUM" selected>Medium (Standard)</option>
+                    <option value="LOW">Low (Mild)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- STEP 3: Symptoms Checklist -->
+              <h4 style="margin-top:1.5rem; margin-bottom: 0.75rem; border-bottom: 1px solid var(--bg-card-border); padding-bottom: 0.4rem;">Step 3: Observed Symptoms</h4>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; margin-bottom:1rem;">
+                <label><input type="checkbox" name="symptoms" value="Chest Pain"> Chest Pain</label>
+                <label><input type="checkbox" name="symptoms" value="Difficulty Breathing"> Difficulty Breathing</label>
+                <label><input type="checkbox" name="symptoms" value="Unconsciousness"> Unconsciousness</label>
+                <label><input type="checkbox" name="symptoms" value="Severe Bleeding"> Severe Bleeding</label>
+                <label><input type="checkbox" name="symptoms" value="Dizziness"> Dizziness</label>
+                <label><input type="checkbox" name="symptoms" value="Vomiting"> Vomiting</label>
+                <label><input type="checkbox" name="symptoms" value="High Fever"> High Fever</label>
+                <label><input type="checkbox" name="symptoms" value="Severe Pain"> Severe Pain</label>
+              </div>
+              <div class="form-group">
+                <input type="text" id="otherSymptomsInput" class="form-control" placeholder="Other symptoms (comma separated)">
+              </div>
+
+              <!-- STEP 4: Location Capture -->
+              <h4 style="margin-top:1.5rem; margin-bottom: 0.75rem; border-bottom: 1px solid var(--bg-card-border); padding-bottom: 0.4rem;">Step 4: Location Along Dindi Route</h4>
+              <div class="d-flex align-center justify-between" style="margin-bottom:1rem;">
+                <div style="font-size:0.85rem; color:var(--text-secondary);">Capture location via GPS or select Wari Route Zone</div>
+                <button type="button" class="btn btn-sm btn-secondary" id="gpsLocateBtn" onclick="captureGPSLocation()">📍 Use GPS Location</button>
+              </div>
+              <div id="gpsDisplayNote" style="font-size:0.825rem; margin-bottom:0.75rem;"></div>
+
+              <input type="hidden" id="medLat">
+              <input type="hidden" id="medLon">
+              <input type="hidden" id="medLocSource" value="MANUAL">
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="medZone">Wari Route Zone *</label>
+                  <select id="medZone" class="form-select" required>
+                    <option value="Alandi">Alandi</option>
+                    <option value="Pune Route">Pune Route</option>
+                    <option value="Saswad" selected>Saswad</option>
+                    <option value="Jejuri">Jejuri</option>
+                    <option value="Lonand">Lonand</option>
+                    <option value="Phaltan">Phaltan</option>
+                    <option value="Malshiras">Malshiras</option>
+                    <option value="Pandharpur">Pandharpur</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="medLandmark">Landmark / Halt Pavilion</label>
+                  <input type="text" id="medLandmark" class="form-control" placeholder="e.g. Near Palkhi Halt Tent 4 or Water Tank 3">
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="medRoute">Route Name</label>
+                  <input type="text" id="medRoute" class="form-control" value="Alandi-Pandharpur Dindi Route">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="medLocDesc">Location Description</label>
+                  <input type="text" id="medLocDesc" class="form-control" placeholder="e.g. Behind main medical camp tent">
+                </div>
+              </div>
+
+              <!-- STEP 5: Additional Notes -->
+              <div class="form-group">
+                <label class="form-label" for="medDescription">Additional Notes / Description</label>
+                <textarea id="medDescription" class="form-control" rows="3" placeholder="Describe symptoms, patient condition, or special requirements..."></textarea>
+              </div>
+
+              <div class="d-flex justify-between align-center" style="margin-top: 1.75rem;">
+                <a href="../medical/my-medical-cases.html" class="btn btn-secondary">Cancel</a>
+                <button type="submit" id="reportSubmitBtn" class="btn btn-danger" style="padding:0.8rem 2rem; font-weight:700;">🚨 DISPATCH EMERGENCY ALERT</button>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/i18n_keys.js"></script>
+  <script src="../assets/js/medical.js"></script>
+  <script>
+    Auth.requireAuth();
+  </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Sighting – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <div class="main-wrapper" style="margin-left:0; width:100%;">
+      <main class="dashboard-content" style="padding-top:3rem;">
+        <div style="max-width: 650px; margin: 0 auto;">
+          <div class="glass-card" style="padding: 2.25rem;">
+            <h2 style="font-size: 1.4rem; margin-bottom: 0.5rem;">Report Possible Person Sighting</h2>
+            <p style="color:var(--text-secondary); font-size:0.875rem; margin-bottom:1.5rem;">
+              If you spotted a person matching this missing report along the Wari route, report your sighting location and observations.
+            </p>
+
+            <form id="sightingForm" onsubmit="handleSightingSubmit(event)">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="sightingZone">Sighting Zone *</label>
+                  <select id="sightingZone" class="form-select" required>
+                    <option value="Alandi">Alandi</option>
+                    <option value="Pune Route">Pune Route</option>
+                    <option value="Saswad" selected>Saswad</option>
+                    <option value="Jejuri">Jejuri</option>
+                    <option value="Lonand">Lonand</option>
+                    <option value="Phaltan">Phaltan</option>
+                    <option value="Malshiras">Malshiras</option>
+                    <option value="Pandharpur">Pandharpur</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="sightingConfidence">Confidence Rating</label>
+                  <select id="sightingConfidence" class="form-select">
+                    <option value="HIGH">High (Certain Match)</option>
+                    <option value="MEDIUM" selected>Medium (Likely Match)</option>
+                    <option value="LOW">Low (Possible Match)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="sightingLocDesc">Exact Location Description *</label>
+                <input type="text" id="sightingLocDesc" class="form-control" placeholder="e.g. Near Saswad Help Center 2 or Annachhatra tent" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="sightingNotes">Observation Description *</label>
+                <textarea id="sightingNotes" class="form-control" rows="3" placeholder="Describe person's condition, clothing, companions..." required></textarea>
+              </div>
+
+              <div class="d-flex justify-between align-center" style="margin-top: 1.75rem;">
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Submit Sighting Report</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function handleSightingSubmit(e) {
+      e.preventDefault();
+      const urlParams = new URLSearchParams(window.location.search);
+      const caseId = urlParams.get('case_id');
+
+      const payload = {
+        zone: document.getElementById('sightingZone').value,
+        confidence_rating: document.getElementById('sightingConfidence').value,
+        location_description: document.getElementById('sightingLocDesc').value.trim(),
+        description: document.getElementById('sightingNotes').value.trim()
+      };
+
+      const res = await APIClient.post(`/api/lost-person/cases/${caseId}/sightings`, payload);
+      if (res.success) {
+        Auth.showToast('Sighting report submitted successfully!', 'success');
+        setTimeout(() => {
+          window.location.href = `/lost-person/lost-case-details.html?case_id=${caseId}`;
+        }, 800);
+      } else {
+        Auth.showToast(res.message, 'error');
+      }
+    }
+  </script>
+</body>
+</html>

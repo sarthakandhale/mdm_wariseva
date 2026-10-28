@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Item Matches Pipeline B – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🤖</div>
+          <div class="brand-text">Wari<span>AI</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item"><a href="../ai/dashboard.html">🤖 AI Match Dashboard</a></li>
+        <li class="sidebar-item"><a href="../ai/person-matches.html">👥 Person Matches (Pipeline A)</a></li>
+        <li class="sidebar-item active"><a href="../ai/item-matches.html">📦 Item Matches (Pipeline B)</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Pipeline B: Lost Item ↔ Found Item Matching</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div class="glass-card" style="padding:1.75rem; margin-bottom:1.5rem;">
+          <div class="d-flex justify-between align-center">
+            <div>
+              <h2>Item Candidate Workbench</h2>
+              <p style="color:var(--text-secondary); font-size:0.9rem;">
+                Weighted vector similarity matching across category, brand, model, color, description, and lost/found location
+              </p>
+            </div>
+            <button class="btn btn-success" onclick="triggerItemMatching(1)">⚡ Run AI Item Engine for Item #1</button>
+          </div>
+        </div>
+
+        <div id="itemMatchesList">
+          <!-- Loaded dynamically -->
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/ai-matching.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function loadItemMatchesPage() {
+      const container = document.getElementById('itemMatchesList');
+      const res = await APIClient.get('/api/ai/matches/item/1');
+      if (res.success) {
+        const matches = res.data;
+        if (matches.length === 0) {
+          container.innerHTML = `<div class="glass-card" style="padding:2rem;text-align:center;">No item match recommendations generated yet. Click "Run AI Item Engine".</div>`;
+          return;
+        }
+
+        container.innerHTML = matches.map(m => `
+          <div class="glass-card" style="padding:1.5rem; margin-bottom:1.25rem; border-left:4px solid var(--color-success);">
+            <div class="d-flex justify-between align-center" style="flex-wrap:wrap;gap:1rem;">
+              <div>
+                <div class="d-flex align-center gap-2">
+                  <h3>Match #${m.id}: Lost Item #${m.source_case_id} ↔ Found #${m.found_case_number}</h3>
+                  <span class="badge badge-active">${m.match_score}% MATCH</span>
+                  <span class="badge badge-pending">${m.status}</span>
+                </div>
+                <div style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.3rem;">
+                  Item: <strong>${m.found_item_name}</strong> | Confidence: <strong>${m.confidence_score}%</strong> | Data Quality: <strong>${m.data_quality_score}%</strong>
+                </div>
+              </div>
+              <a href="../ai/match-details.html?match_id=${m.id}" class="btn btn-sm btn-primary">🔍 Side-by-Side Review</a>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+    loadItemMatchesPage();
+  </script>
+</body>
+</html>

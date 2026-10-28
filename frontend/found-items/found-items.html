@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Found Items Catalog – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Wari<span>Seva</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item"><a href="../lost-items/report-lost-item.html">📦 Report Lost Item</a></li>
+        <li class="sidebar-item active"><a href="../found-items/found-items.html">🔍 Search Found Catalog</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Found Items Public Catalog</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div class="d-flex justify-between align-center" style="margin-bottom: 1.5rem;">
+          <div>
+            <h2>Found Belongings Directory</h2>
+            <p style="color:var(--text-secondary);font-size:0.9rem;">Browse found items retrieved by volunteers and police officers across the route</p>
+          </div>
+          <a href="../found-items/report-found-item.html" class="btn btn-success">+ Report Found Item</a>
+        </div>
+
+        <div id="foundItemsCatalogContainer"></div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/item.js"></script>
+  <script>
+    Auth.requireAuth();
+  </script>
+</body>
+</html>

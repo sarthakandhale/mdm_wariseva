@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dindi Directory – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Wari<span>Seva</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../dindi/directory.html">🚩 Dindi Directory</a></li>
+        <li class="sidebar-item"><a href="../dindi-leader/dashboard.html">👮 Dindi Leader Desk</a></li>
+        <li class="sidebar-item"><a href="../dindi-member/dashboard.html">👤 Warkari Member Desk</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Registered Warkari Dindi Groups Directory</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div class="d-flex justify-between align-center" style="margin-bottom: 1.5rem;">
+          <div>
+            <h2>Alandi–Pandharpur Dindi Directory</h2>
+            <p style="color:var(--text-secondary);font-size:0.9rem;">Browse registered Dindis, leaders, and march schedules</p>
+          </div>
+          <a href="../admin/dindi/create.html" class="btn btn-primary">+ Register New Dindi</a>
+        </div>
+
+        <div id="dindiDirectoryContainer"></div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/dindi.js"></script>
+  <script>
+    Auth.requireAuth();
+  </script>
+</body>
+</html>

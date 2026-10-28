@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dindi Details – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Wari<span>Seva</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item"><a href="../dindi/directory.html">← Back to Dindi Directory</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Dindi Group Overview & Daily Schedule</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div style="max-width: 900px; margin: 0 auto;" id="dindiDetailsContainer">
+          <!-- Loaded dynamically -->
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function loadDindiDetailsView() {
+      const container = document.getElementById('dindiDetailsContainer');
+      const urlParams = new URLSearchParams(window.location.search);
+      const dindiId = urlParams.get('dindi_id') || 1;
+
+      container.innerHTML = `<div class="glass-card" style="padding:2rem;text-align:center;">Loading Dindi details...</div>`;
+
+      const res = await APIClient.get(`/api/dindis/${dindiId}`);
+      if (!res.success) {
+        container.innerHTML = `<div class="glass-card" style="padding:2rem;color:var(--color-accent-crimson);">${res.message}</div>`;
+        return;
+      }
+
+      const d = res.data;
+      const leaders = d.leaders || [];
+      const schedules = d.schedules || [];
+      const announcements = d.announcements || [];
+      const contacts = d.contacts || [];
+
+      container.innerHTML = `
+        <!-- Dindi Header Card -->
+        <div class="glass-card" style="padding:2rem; margin-bottom:1.5rem; border-left:5px solid var(--color-primary);">
+          <div class="d-flex justify-between align-center" style="flex-wrap:wrap;gap:1rem;">
+            <div>
+              <div class="d-flex align-center gap-2">
+                <h2 style="font-size:1.6rem;">Dindi #${d.dindi_number} - ${d.name}</h2>
+                <span class="badge badge-active">${d.status}</span>
+              </div>
+              <div style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.4rem;">
+                Official Code: <strong>${d.dindi_code}</strong> | Route: <strong>${d.start_location} → ${d.destination}</strong>
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <a href="../dindi-leader/dashboard.html?dindi_id=${d.id}" class="btn btn-sm btn-primary">👮 Leader Console</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leader & Contact Info -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
+          <div class="glass-card" style="padding:1.5rem;">
+            <h3 style="margin-bottom:1rem; border-bottom:1px solid var(--bg-card-border); padding-bottom:0.5rem;">Dindi Leadership</h3>
+            ${leaders.map(l => `
+              <div style="font-size:0.9rem; margin-bottom:0.5rem;">
+                <strong>${l.role}:</strong> ${l.full_name} (${l.mobile})
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="glass-card" style="padding:1.5rem;">
+            <h3 style="margin-bottom:1rem; border-bottom:1px solid var(--bg-card-border); padding-bottom:0.5rem;">Dindi Contacts</h3>
+            ${contacts.map(c => `
+              <div style="font-size:0.9rem; margin-bottom:0.5rem;">
+                <strong>${c.contact_name}</strong> (${c.contact_type}): ${c.contact_number}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Daily Route Schedule -->
+        <div class="glass-card" style="padding:1.5rem; margin-bottom:1.5rem;">
+          <h3 style="margin-bottom:1rem;">📅 Route Schedule & Daily Rest Points</h3>
+          <div style="overflow-x:auto;">
+            <table class="table" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr style="text-align:left; border-bottom:1px solid var(--bg-card-border);">
+                  <th style="padding:0.6rem;">Date</th>
+                  <th style="padding:0.6rem;">Route Section</th>
+                  <th style="padding:0.6rem;">Timing</th>
+                  <th style="padding:0.6rem;">Rest Point</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${schedules.map(s => `
+                  <tr>
+                    <td><strong>${s.schedule_date}</strong></td>
+                    <td>${s.start_location} → ${s.end_location}</td>
+                    <td>${s.expected_start_time} - ${s.expected_arrival_time}</td>
+                    <td><span class="badge badge-active">${s.rest_point}</span></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Active Announcements -->
+        <div class="glass-card" style="padding:1.5rem;">
+          <h3 style="margin-bottom:1rem;">📢 Active Dindi Announcements</h3>
+          ${announcements.map(a => `
+            <div style="padding:0.85rem; background:rgba(234,179,8,0.1); border:1px solid var(--color-accent-gold); border-radius:var(--radius-sm); margin-bottom:0.75rem;">
+              <div class="d-flex justify-between align-center">
+                <strong style="color:var(--color-accent-gold); font-size:0.95rem;">${a.title}</strong>
+                <span class="badge badge-pending">${a.priority}</span>
+              </div>
+              <p style="font-size:0.875rem; margin-top:0.3rem;">${a.message}</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    loadDindiDetailsView();
+  </script>
+</body>
+</html>

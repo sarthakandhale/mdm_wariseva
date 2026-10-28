@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit Owner Claim – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <div class="main-wrapper" style="margin-left:0; width:100%;">
+      <main class="dashboard-content" style="padding-top:3rem;">
+        <div style="max-width: 600px; margin: 0 auto;">
+          <div class="glass-card" style="padding: 2.25rem;">
+            <h2 style="font-size: 1.4rem; margin-bottom: 0.5rem;">🙋 Submit Item Ownership Claim</h2>
+            <p style="color:var(--text-secondary); font-size:0.875rem; margin-bottom:1.5rem;">
+              Provide proof of ownership (exact model, hidden marks, wallpaper, purchase receipt, serial number) to claim this found belonging.
+            </p>
+
+            <form id="claimForm" onsubmit="handleClaimSubmit(event)">
+              <div class="form-group">
+                <label class="form-label" for="claimDesc">Detailed Proof of Ownership *</label>
+                <textarea id="claimDesc" class="form-control" rows="4" placeholder="Describe private details (e.g. wallpaper picture, scratch on back cover, contents inside wallet, phone passcode hints)..." required></textarea>
+              </div>
+
+              <div class="d-flex justify-between align-center" style="margin-top: 1.75rem;">
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                <button type="submit" class="btn btn-success">🙋 Submit Ownership Claim</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function handleClaimSubmit(e) {
+      e.preventDefault();
+      const urlParams = new URLSearchParams(window.location.search);
+      const caseId = urlParams.get('case_id');
+
+      const payload = {
+        claim_description: document.getElementById('claimDesc').value.trim()
+      };
+
+      const res = await APIClient.post(`/api/found-items/${caseId}/claims`, payload);
+      if (res.success) {
+        Auth.showToast(`Claim #${res.data.claim_number} submitted!`, 'success');
+        setTimeout(() => {
+          window.location.href = `/found-items/found-item-details.html?case_id=${caseId}`;
+        }, 800);
+      } else {
+        Auth.showToast(res.message, 'error');
+      }
+    }
+  </script>
+</body>
+</html>

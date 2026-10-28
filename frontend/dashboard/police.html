@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Police Operations Console – ReuniteAI</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Reunite<span>AI</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../dashboard/police.html">👮 Police Operations</a></li>
+        <li class="sidebar-item"><a href="../lost-person/report-lost.html">🚨 File Missing Case</a></li>
+        <li class="sidebar-item"><a href="../lost-person/my-lost-cases.html">📋 Missing Cases Directory</a></li>
+        <li class="sidebar-item"><a href="../found-person/report-found.html">📷 Register Found Person</a></li>
+        <li class="sidebar-item"><a href="../found-person/found-person-cases.html">🏢 Safe Custody Cases</a></li>
+        <li class="sidebar-item"><a href="../ai/person-matches.html">🤖 AI Person Biometric Matches</a></li>
+        <li class="sidebar-item"><a href="../found-person/verification.html">✅ Identity Verification Desk</a></li>
+        <li class="sidebar-item"><a href="../found-items/found-items.html">🎒 Found Items & Claims</a></li>
+        <li class="sidebar-item"><a href="../ai/item-matches.html">🤖 AI Item Matches</a></li>
+        <li class="sidebar-item"><a href="../map/wari-map.html">🗺️ Precinct & Route Map</a></li>
+        <li class="sidebar-item"><a href="../coordinator/volunteers/recommendations.html?task_id=1">🤝 Volunteer Sector Desk</a></li>
+        <li class="sidebar-item"><a href="../profile.html">👤 My Profile</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Law Enforcement Command Console – Control Room</h3>
+        </div>
+        <div class="navbar-right">
+          <div class="user-profile-btn" onclick="window.location.href="../profile.html"">
+            <div class="avatar-circle" id="navUserAvatar">P</div>
+            <div>
+              <div id="navUserName" style="font-weight:600;font-size:0.875rem;">Inspector Rajesh</div>
+              <div id="navUserRole" style="font-size:0.75rem;color:var(--color-accent-gold);">POLICE OFFICER</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div class="stat-grid">
+          <div class="glass-card stat-card">
+            <div class="stat-header"><span>Active Missing Cases</span><div class="stat-icon">🚨</div></div>
+            <div class="stat-value">Active</div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-header"><span>Safe Custody Persons</span><div class="stat-icon">🏢</div></div>
+            <div class="stat-value">Logged</div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-header"><span>AI High-Confidence Matches</span><div class="stat-icon">🤖</div></div>
+            <div class="stat-value">Ready</div>
+          </div>
+        </div>
+
+        <h3 style="margin-bottom: 1rem;">Police Operations Workbench</h3>
+        <div class="placeholder-grid">
+          <div class="glass-card module-card">
+            <h4>📋 Missing Cases & Complaints</h4>
+            <p>Real-time missing person reports filed across precinct posts, emergency priority overrides, and sighting logs.</p>
+            <div style="margin-top:1rem;">
+              <a href="../lost-person/report-lost.html" class="btn btn-danger btn-sm">File Missing Case</a>
+              <a href="../lost-person/my-lost-cases.html" class="btn btn-secondary btn-sm">View All Cases</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🏢 Safe Custody & Found Persons</h4>
+            <p>Manage found person registrations, custody placement camps, and family contact logs.</p>
+            <div style="margin-top:1rem;">
+              <a href="../found-person/report-found.html" class="btn btn-primary btn-sm">Register Found Person</a>
+              <a href="../found-person/found-person-cases.html" class="btn btn-secondary btn-sm">View Found Directory</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🤖 AI Biometric Matcher Console</h4>
+            <p>Pipeline A similarity engine scoring lost vs. found candidate profiles with human-readable match explanations.</p>
+            <div style="margin-top:1rem;">
+              <a href="../ai/person-matches.html" class="btn btn-primary btn-sm">Open Person Matcher</a>
+              <a href="../ai/dashboard.html" class="btn btn-secondary btn-sm">AI Analytics</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>✅ Official Identity Verification & Handover</h4>
+            <p>Perform multi-step identity verification, photo comparison, and sign off official police handover certificates.</p>
+            <div style="margin-top:1rem;">
+              <a href="../found-person/verification.html" class="btn btn-success btn-sm">Identity Verification Desk</a>
+              <a href="../found-person/reunification.html" class="btn btn-secondary btn-sm">Handover Records</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🎒 Found Items & Chain of Custody</h4>
+            <p>Manage recovered items, secure storage locker assignments, owner claim verification, and return handover.</p>
+            <div style="margin-top:1rem;">
+              <a href="../found-items/found-items.html" class="btn btn-primary btn-sm">Found Items & Lockers</a>
+              <a href="../ai/item-matches.html" class="btn btn-secondary btn-sm">AI Item Matcher</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🤝 Sector Volunteer Coordination</h4>
+            <p>Direct ground volunteer teams, review rule-based task recommendations, and deploy precinct sector units.</p>
+            <div style="margin-top:1rem;">
+              <a href="../coordinator/volunteers/recommendations.html?task_id=1" class="btn btn-warning btn-sm">Volunteer Task Console</a>
+              <a href="../map/wari-map.html" class="btn btn-secondary btn-sm">Precinct Map</a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>Auth.requireAuth(['POLICE_OFFICER', 'SUPER_ADMIN']);</script>
+</body>
+</html>

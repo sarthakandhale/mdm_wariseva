@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Found Person Case Details – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Wari<span>Seva</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item"><a href="../found-person/found-person-cases.html">← Back to Found Cases</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Found Person Safe Custody Details</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div style="max-width: 900px; margin: 0 auto;" id="foundCaseDetailsView">
+          <!-- Dynamically loaded -->
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function loadFoundCaseDetailsPage() {
+      const container = document.getElementById('foundCaseDetailsView');
+      const urlParams = new URLSearchParams(window.location.search);
+      const caseId = urlParams.get('case_id');
+
+      if (!caseId) {
+        container.innerHTML = `<div class="glass-card" style="padding:2rem;">No Case ID specified.</div>`;
+        return;
+      }
+
+      container.innerHTML = `<div class="glass-card" style="padding:2rem;text-align:center;">Loading found case details...</div>`;
+
+      const res = await APIClient.get(`/api/found-person/cases/${caseId}`);
+      if (!res.success) {
+        container.innerHTML = `<div class="glass-card" style="padding:2rem;color:var(--color-accent-crimson);">${res.message}</div>`;
+        return;
+      }
+
+      const c = res.data;
+      const l = c.location || {};
+      const cl = c.clothing || {};
+      const sl = c.safe_location || {};
+      const clues = c.clues || [];
+      const v = c.verification || {};
+      const r = c.reunification || {};
+
+      container.innerHTML = `
+        <!-- Case Header -->
+        <div class="glass-card" style="padding:2rem; margin-bottom:1.5rem; border-left:5px solid var(--color-success);">
+          <div class="d-flex justify-between align-center" style="flex-wrap:wrap;gap:1rem;">
+            <div>
+              <div class="d-flex align-center gap-2">
+                <h2 style="font-size:1.6rem;">Case #${c.case_number} (${c.temporary_person_id})</h2>
+                <span class="badge badge-active">${c.identification_status}</span>
+                <span class="badge badge-pending">${c.status}</span>
+              </div>
+              <div style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.4rem;">
+                Reported by: <strong>${c.reporter_name}</strong> (${c.reporter_mobile}) | Stated Language: <strong>${c.language}</strong>
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <a href="../found-person/verification.html?case_id=${c.id}" class="btn btn-primary btn-sm">Verify Identity</a>
+              <a href="../found-person/reunification.html?case_id=${c.id}" class="btn btn-success btn-sm">🤝 Perform Reunification</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Details Grid -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
+          
+          <!-- Person & Safe Location Info -->
+          <div class="glass-card" style="padding:1.5rem;">
+            <h3 style="margin-bottom:1rem; border-bottom:1px solid var(--bg-card-border); padding-bottom:0.5rem;">Found Person & Safe Placement</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; font-size:0.9rem;">
+              <div><span style="color:var(--text-muted)">Stated Name:</span> <strong>${c.approximate_name || 'Unidentified'}</strong></div>
+              <div><span style="color:var(--text-muted)">Age / Gender:</span> <strong>${c.approximate_age} yrs / ${c.gender}</strong></div>
+              <div style="grid-column:span 2;"><span style="color:var(--text-muted)">Safe Assistance Location:</span> <strong style="color:var(--color-primary);">${sl.location_name || 'Help Center'}</strong></div>
+              <div><span style="color:var(--text-muted)">Placement Status:</span> <strong>${sl.status || 'AT_HELP_CENTER'}</strong></div>
+              <div><span style="color:var(--text-muted)">Communication:</span> <strong>${c.communication_status}</strong></div>
+            </div>
+          </div>
+
+          <!-- Found Location & Clothing -->
+          <div class="glass-card" style="padding:1.5rem;">
+            <h3 style="margin-bottom:1rem; border-bottom:1px solid var(--bg-card-border); padding-bottom:0.5rem;">Found Spot & Clothing</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; font-size:0.9rem;">
+              <div><span style="color:var(--text-muted)">Zone:</span> <strong>${l.zone || 'N/A'}</strong></div>
+              <div><span style="color:var(--text-muted)">Landmark:</span> <strong>${l.landmark || 'N/A'}</strong></div>
+              <div style="grid-column:span 2;"><span style="color:var(--text-muted)">Top Wear:</span> <strong>${cl.top_color || ''} ${cl.top_type || 'N/A'}</strong></div>
+              <div style="grid-column:span 2;"><span style="color:var(--text-muted)">Bottom Wear:</span> <strong>${cl.bottom_color || ''} ${cl.bottom_type || 'N/A'}</strong></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Identification Clues -->
+        <div class="glass-card" style="padding:1.5rem; margin-bottom:1.5rem;">
+          <div class="d-flex justify-between align-center" style="margin-bottom:1rem;">
+            <h3>🔍 Identification Clues</h3>
+            <button class="btn btn-sm btn-secondary" onclick="addCluePrompt(${c.id})">+ Add Verbal Clue</button>
+          </div>
+          ${clues.length === 0 ? `<div style="color:var(--text-muted);">No clues recorded yet.</div>` : clues.map(cl => `
+            <div style="padding:0.75rem; background:rgba(255,255,255,0.03); border-radius:var(--radius-sm); margin-bottom:0.5rem;" class="d-flex justify-between align-center">
+              <div>
+                <strong>${cl.clue_type}:</strong> ${cl.clue_value}
+                <span class="badge ${cl.verified ? 'badge-active' : 'badge-pending'}" style="font-size:0.7rem;margin-left:0.5rem;">${cl.verified ? 'VERIFIED' : 'UNVERIFIED'}</span>
+              </div>
+              <div style="font-size:0.75rem;color:var(--text-muted);">${cl.source}</div>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- Identity Verification Status -->
+        <div class="glass-card" style="padding:1.5rem; margin-bottom:1.5rem;">
+          <h3>🛡️ Identity Verification Status</h3>
+          <div style="margin-top:0.75rem; font-size:0.9rem;">
+            Verification Status: <strong style="color:var(--color-primary);">${v.verification_status || 'NOT_STARTED'}</strong>
+            ${v.verifier_name ? `| Verified By: <strong>${v.verifier_name}</strong> on ${v.verified_at}` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    async function addCluePrompt(caseId) {
+      const type = prompt("Enter Clue Type (e.g. NAME, DINDI_NUMBER, VILLAGE, FAMILY_NAME):", "DINDI_NUMBER");
+      if (!type) return;
+      const val = prompt("Enter Clue Value (e.g. Dindi 27 or Pune Village):");
+      if (!val) return;
+
+      const res = await APIClient.post(`/api/found-person/cases/${caseId}/identification-clues`, {
+        clue_type: type,
+        clue_value: val,
+        confidence: 'HIGH'
+      });
+      if (res.success) {
+        Auth.showToast('Identification clue added!', 'success');
+        loadFoundCaseDetailsPage();
+      }
+    }
+
+    loadFoundCaseDetailsPage();
+  </script>
+</body>
+</html>

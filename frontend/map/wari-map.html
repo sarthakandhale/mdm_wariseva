@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Wari Map – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #wariMapContainer {
+      height: 520px;
+      width: 100%;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--bg-card-border);
+      box-shadow: var(--shadow-card);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🗺️</div>
+          <div class="brand-text">Wari<span>Map</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../map/wari-map.html">🗺️ Interactive Wari Map</a></li>
+        <li class="sidebar-item"><a href="../map/nearby-services.html">🏥 Nearby Services</a></li>
+        <li class="sidebar-item"><a href="../dindi-location/dashboard.html">📍 Dindi Location Console</a></li>
+        <li class="sidebar-item"><a href="../dindi/directory.html">🚩 Dindi Directory</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Alandi–Pandharpur Interactive Wari Route Map</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div class="d-flex justify-between align-center" style="margin-bottom: 1.25rem;">
+          <div>
+            <h2>Wari Route & Real-Time Facility Intelligence</h2>
+            <p style="color:var(--text-secondary);font-size:0.875rem;">Interactive OpenStreetMap with Dindi locations, medical camps, and rest points</p>
+          </div>
+          <a href="../map/nearby-services.html" class="btn btn-primary">🔍 Find Nearby Facilities</a>
+        </div>
+
+        <!-- Legend Bar -->
+        <div class="glass-card d-flex align-center gap-3" style="padding:0.85rem 1.25rem; margin-bottom:1rem; flex-wrap:wrap; font-size:0.85rem;">
+          <div><strong>Map Legend:</strong></div>
+          <div class="d-flex align-center gap-1"><span style="color:#3b82f6;">🔵</span> Blue: Wari Route</div>
+          <div class="d-flex align-center gap-1"><span style="color:#10b981;">🟢</span> Green: Medical Camp</div>
+          <div class="d-flex align-center gap-1"><span style="color:#f59e0b;">🟠</span> Orange: Help Center</div>
+          <div class="d-flex align-center gap-1"><span style="color:#06b6d4;">🌐</span> Cyan: Water Point</div>
+          <div class="d-flex align-center gap-1"><span style="color:#8b5cf6;">🟣</span> Purple: Dindi Location</div>
+        </div>
+
+        <!-- Leaflet Map Container -->
+        <div id="wariMapContainer"></div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/route-map.js"></script>
+  <script>
+    Auth.requireAuth();
+  </script>
+</body>
+</html>

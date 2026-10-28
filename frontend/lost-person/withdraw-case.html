@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Withdraw Missing Case – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <div class="main-wrapper" style="margin-left:0; width:100%;">
+      <main class="dashboard-content" style="padding-top:3rem;">
+        <div style="max-width: 600px; margin: 0 auto;">
+          <div class="glass-card" style="padding: 2.25rem;">
+            <h2 style="font-size: 1.4rem; margin-bottom: 0.5rem;">Withdraw Missing Person Report</h2>
+            <p style="color:var(--text-secondary); font-size:0.875rem; margin-bottom:1.5rem;">
+              If the missing family member has been located or reunited, withdraw the report. Status will update to WITHDRAWN while preserving all audit records.
+            </p>
+
+            <form id="withdrawForm" onsubmit="handleWithdrawSubmit(event)">
+              <div class="form-group">
+                <label class="form-label" for="withdrawReason">Withdrawal Reason *</label>
+                <select id="withdrawReason" class="form-select" required>
+                  <option value="FOUND BY FAMILY">Found by family guardian</option>
+                  <option value="FOUND BY DINDI">Found by Dindi companions</option>
+                  <option value="DUPLICATE REPORT">Duplicate report</option>
+                  <option value="INCORRECT REPORT">Incorrect report details</option>
+                  <option value="OTHER">Other reason</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="withdrawNotes">Additional Notes</label>
+                <textarea id="withdrawNotes" class="form-control" rows="3" placeholder="Provide details on how the person was found..."></textarea>
+              </div>
+
+              <div class="d-flex justify-between align-center" style="margin-top: 1.75rem;">
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                <button type="submit" class="btn btn-danger">Confirm Case Withdrawal</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function handleWithdrawSubmit(e) {
+      e.preventDefault();
+      const urlParams = new URLSearchParams(window.location.search);
+      const caseId = urlParams.get('case_id');
+
+      const payload = {
+        reason: `${document.getElementById('withdrawReason').value}: ${document.getElementById('withdrawNotes').value.trim()}`
+      };
+
+      const res = await APIClient.post(`/api/lost-person/cases/${caseId}/withdraw`, payload);
+      if (res.success) {
+        Auth.showToast('Missing report withdrawn successfully.', 'success');
+        setTimeout(() => {
+          window.location.href = `/lost-person/my-lost-cases.html`;
+        }, 800);
+      } else {
+        Auth.showToast(res.message, 'error');
+      }
+    }
+  </script>
+</body>
+</html>

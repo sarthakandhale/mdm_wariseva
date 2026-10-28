@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Matching Command Console – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🤖</div>
+          <div class="brand-text">Wari<span>AI</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../ai/dashboard.html">🤖 AI Match Dashboard</a></li>
+        <li class="sidebar-item"><a href="../ai/person-matches.html">👥 Person Matches (Pipeline A)</a></li>
+        <li class="sidebar-item"><a href="../ai/item-matches.html">📦 Item Matches (Pipeline B)</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>AI Decision Support & Matching Console</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <!-- AI Notice Banner -->
+        <div style="background:rgba(234,179,8,0.15); border:1px solid var(--color-accent-gold); color:var(--color-accent-gold); padding:0.85rem 1.25rem; border-radius:var(--radius-md); margin-bottom:1.5rem; font-weight:600; font-size:0.9rem;" class="d-flex align-center gap-2">
+          <span>⚠️</span>
+          <span><strong>AI DECISION SUPPORT NOTICE:</strong> AI outputs candidate recommendations (`Potential Match`). Identity confirmation or item return requires human verification by authorized personnel.</span>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div id="aiDashboardMetrics" style="margin-bottom:1.75rem;"></div>
+
+        <!-- Recent Match Table -->
+        <div class="glass-card" style="padding:1.75rem;">
+          <div class="d-flex justify-between align-center" style="margin-bottom:1.25rem;">
+            <h2 style="font-size:1.3rem;">Recent Candidate Match Recommendations</h2>
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-primary" onclick="triggerPersonMatching(1)">⚡ Run Person AI Engine</button>
+              <button class="btn btn-sm btn-success" onclick="triggerItemMatching(1)">⚡ Run Item AI Engine</button>
+            </div>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="table" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr style="text-align:left; border-bottom:1px solid var(--bg-card-border);">
+                  <th style="padding:0.75rem;">Type</th>
+                  <th style="padding:0.75rem;">Cases Compared</th>
+                  <th style="padding:0.75rem;">Match & Confidence</th>
+                  <th style="padding:0.75rem;">Status</th>
+                  <th style="padding:0.75rem;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="aiRecentMatchesBody">
+                <!-- Dynamically loaded -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/ai-matching.js"></script>
+  <script>
+    Auth.requireAuth();
+  </script>
+</body>
+</html>

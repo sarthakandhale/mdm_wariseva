@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volunteer Dashboard – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🤝</div>
+          <div class="brand-text">Volunteer<span>Desk</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../volunteer/dashboard.html">🤝 Volunteer Dashboard</a></li>
+        <li class="sidebar-item"><a href="../coordinator/volunteers/recommendations.html">🎯 Task Recommendations</a></li>
+        <li class="sidebar-item"><a href="../map/wari-map.html">🗺️ Wari Map</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Volunteer Duty & Task Execution Console</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div class="d-flex justify-between align-center" style="margin-bottom:1.5rem;">
+          <div>
+            <h2>Assigned Volunteer Tasks</h2>
+            <p style="color:var(--text-secondary); font-size:0.875rem;">Manage active tasks, accept assignments, and submit completion reports</p>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-success btn-sm" onclick="handleDutyCheckIn()">🟢 Shift Check-in</button>
+            <button class="btn btn-secondary btn-sm" onclick="handleDutyCheckOut()">🔴 Shift Check-out</button>
+          </div>
+        </div>
+
+        <div id="volunteerDashboardContainer">
+          <!-- Loaded dynamically -->
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/volunteer.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function handleDutyCheckIn() {
+      const res = await APIClient.post('/api/volunteers/1/check-in', { shift_id: 1 });
+      if (res.success) {
+        Auth.showToast('Shift Check-in logged. Status: ON_DUTY', 'success');
+      } else {
+        Auth.showToast(res.message, 'error');
+      }
+    }
+
+    async function handleDutyCheckOut() {
+      const res = await APIClient.post('/api/volunteers/1/check-out', {});
+      if (res.success) {
+        Auth.showToast('Shift Check-out logged. Status: OFFLINE', 'info');
+      } else {
+        Auth.showToast(res.message, 'error');
+      }
+    }
+  </script>
+</body>
+</html>

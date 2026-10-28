@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Person Profile – ReuniteAI</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Reunite<span>AI</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item"><a href="../family/family-dashboard.html">← Back to Family Dashboard</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Edit Person Profile</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div style="max-width: 800px; margin: 0 auto;">
+          <div class="glass-card" style="padding: 2.25rem;">
+            <h2 style="font-size: 1.4rem; margin-bottom: 0.5rem;" id="editPersonTitle">Edit Profile Details</h2>
+            <div style="font-size: 0.825rem; color: var(--color-accent-gold); margin-bottom: 1.5rem;">
+              ℹ️ Note: Person ID and System UUID are immutable system identifiers and cannot be altered.
+            </div>
+
+            <form id="editPersonForm" onsubmit="handleEditPersonSubmit(event)">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="editFullName">Full Name *</label>
+                  <input type="text" id="editFullName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="editDob">Date of Birth *</label>
+                  <input type="date" id="editDob" class="form-control" required>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="editGender">Gender</label>
+                  <select id="editGender" class="form-select">
+                    <option value="MALE">Male</option>
+                    <option value="FEMALE">Female</option>
+                    <option value="OTHER">Other</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="editHeight">Height</label>
+                  <input type="text" id="editHeight" class="form-control">
+                </div>
+              </div>
+
+              <h4 style="margin-top:1.5rem; margin-bottom:0.75rem; border-bottom:1px solid var(--bg-card-border); padding-bottom:0.4rem;">Expected Clothing Profile</h4>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="editTopType">Top Wear</label>
+                  <input type="text" id="editTopType" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="editTopColor">Top Wear Color</label>
+                  <input type="text" id="editTopColor" class="form-control">
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="editBottomType">Bottom Wear</label>
+                  <input type="text" id="editBottomType" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="editBottomColor">Bottom Wear Color</label>
+                  <input type="text" id="editBottomColor" class="form-control">
+                </div>
+              </div>
+
+              <h4 style="margin-top:1.5rem; margin-bottom:0.75rem; border-bottom:1px solid var(--bg-card-border); padding-bottom:0.4rem;">Optional Medical & Safety Notes</h4>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="editMedicalCondition">Medical Condition</label>
+                  <input type="text" id="editMedicalCondition" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="editAllergies">Allergies</label>
+                  <input type="text" id="editAllergies" class="form-control">
+                </div>
+              </div>
+
+              <div class="d-flex justify-between align-center" style="margin-top: 1.75rem;">
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Profile Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/validators.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function loadEditPersonPage() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const personId = urlParams.get('person_id');
+      if (!personId) return;
+
+      const res = await APIClient.get(`/api/persons/${personId}`);
+      if (res.success) {
+        const p = res.data;
+        document.getElementById('editPersonTitle').innerText = `Edit Profile: ${p.full_name} (${p.person_code})`;
+        document.getElementById('editFullName').value = p.full_name || '';
+        document.getElementById('editDob').value = p.date_of_birth || '';
+        document.getElementById('editGender').value = p.gender || 'MALE';
+        document.getElementById('editHeight').value = p.height || '';
+
+        const c = p.clothing || {};
+        document.getElementById('editTopType').value = c.top_type || '';
+        document.getElementById('editTopColor').value = c.top_color || '';
+        document.getElementById('editBottomType').value = c.bottom_type || '';
+        document.getElementById('editBottomColor').value = c.bottom_color || '';
+
+        const s = p.safety || {};
+        document.getElementById('editMedicalCondition').value = s.medical_condition || '';
+        document.getElementById('editAllergies').value = s.allergy_information || '';
+      }
+    }
+
+    async function handleEditPersonSubmit(e) {
+      e.preventDefault();
+      const urlParams = new URLSearchParams(window.location.search);
+      const personId = urlParams.get('person_id');
+
+      const payload = {
+        full_name: document.getElementById('editFullName').value.trim(),
+        date_of_birth: document.getElementById('editDob').value,
+        gender: document.getElementById('editGender').value,
+        height: document.getElementById('editHeight').value.trim(),
+        top_type: document.getElementById('editTopType').value.trim(),
+        top_color: document.getElementById('editTopColor').value.trim(),
+        bottom_type: document.getElementById('editBottomType').value.trim(),
+        bottom_color: document.getElementById('editBottomColor').value.trim(),
+        medical_condition: document.getElementById('editMedicalCondition').value.trim(),
+        allergy_information: document.getElementById('editAllergies').value.trim()
+      };
+
+      const res = await APIClient.put(`/api/persons/${personId}`, payload);
+      if (res.success) {
+        Auth.showToast('Profile updated successfully!', 'success');
+        setTimeout(() => {
+          window.location.href = `/person/person-profile.html?person_id=${personId}`;
+        }, 800);
+      } else {
+        Auth.showToast(res.message, 'error');
+      }
+    }
+
+    loadEditPersonPage();
+  </script>
+</body>
+</html>

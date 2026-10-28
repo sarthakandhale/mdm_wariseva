@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Lost Item – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Wari<span>Seva</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../lost-items/report-lost-item.html">📦 Report Lost Item</a></li>
+        <li class="sidebar-item"><a href="../lost-items/my-lost-items.html">📋 My Lost Items</a></li>
+        <li class="sidebar-item"><a href="../found-items/found-items.html">🔍 Search Found Catalog</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Lost Item Reporting Wizard</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div style="max-width: 780px; margin: 0 auto;">
+          <div class="glass-card" style="padding: 2.25rem; border-top: 4px solid var(--color-accent-gold);">
+            <h2 style="font-size:1.5rem; margin-bottom:0.5rem;">Report Lost Belonging / Item</h2>
+            <p style="color:var(--text-secondary); font-size:0.875rem; margin-bottom:1.5rem;">
+              Report a lost personal item. Sensitive serial numbers and IMEIs are protected and masked from public view.
+            </p>
+
+            <form id="reportLostItemForm" onsubmit="handleReportLostItemSubmit(event)">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="itemCategory">Item Category *</label>
+                  <select id="itemCategory" class="form-select" required>
+                    <option value="MOBILE_PHONE" selected>Mobile Phone</option>
+                    <option value="WALLET">Wallet / Purse</option>
+                    <option value="DOCUMENT">Documents / ID Cards</option>
+                    <option value="BAG">Bag / Backpack</option>
+                    <option value="ELECTRONICS">Electronics / Gadgets</option>
+                    <option value="JEWELLERY">Jewellery</option>
+                    <option value="KEYS">Keys</option>
+                    <option value="EYEWEAR">Spectacles / Eyewear</option>
+                    <option value="OTHER">Other Belongings</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="itemName">Item Name *</label>
+                  <input type="text" id="itemName" class="form-control" placeholder="e.g. Samsung Galaxy A54 Phone" required>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="itemBrand">Brand</label>
+                  <input type="text" id="itemBrand" class="form-control" placeholder="e.g. Samsung, Titan">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="itemModel">Model</label>
+                  <input type="text" id="itemModel" class="form-control" placeholder="e.g. Galaxy A54 5G">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="itemColor">Color *</label>
+                  <input type="text" id="itemColor" class="form-control" placeholder="e.g. Black, Brown" required>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="itemValue">Approximate Value (₹)</label>
+                  <input type="number" id="itemValue" class="form-control" value="25000">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="itemSerial">Serial Number (Restricted)</label>
+                  <input type="text" id="itemSerial" class="form-control" placeholder="e.g. SN-998811">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="itemIMEI">IMEI Number (Restricted)</label>
+                  <input type="text" id="itemIMEI" class="form-control" placeholder="e.g. 354892019283741">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="itemDesc">Item Description & Distinguishing Marks *</label>
+                <textarea id="itemDesc" class="form-control" rows="2" placeholder="e.g. Black phone in blue silicon cover with cracked screen guard" required></textarea>
+              </div>
+
+              <h4 style="margin-top:1.5rem; margin-bottom:0.75rem; border-bottom:1px solid var(--bg-card-border); padding-bottom:0.4rem;">Lost Location & Time</h4>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="itemZone">Wari Route Zone *</label>
+                  <select id="itemZone" class="form-select" required>
+                    <option value="Alandi">Alandi</option>
+                    <option value="Pune Route">Pune Route</option>
+                    <option value="Saswad" selected>Saswad</option>
+                    <option value="Jejuri">Jejuri</option>
+                    <option value="Lonand">Lonand</option>
+                    <option value="Phaltan">Phaltan</option>
+                    <option value="Malshiras">Malshiras</option>
+                    <option value="Pandharpur">Pandharpur</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="itemLandmark">Landmark / Halt Spot</label>
+                  <input type="text" id="itemLandmark" class="form-control" placeholder="e.g. Near Saswad Halt Water Dispenser 3">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="itemLocDesc">Location Details</label>
+                <input type="text" id="itemLocDesc" class="form-control" placeholder="e.g. Dropped during afternoon tea break">
+              </div>
+
+              <div class="d-flex justify-end align-center" style="margin-top: 1.75rem;">
+                <button type="submit" id="submitLostItemBtn" class="btn btn-primary" style="padding:0.8rem 2rem;">📦 SUBMIT LOST ITEM REPORT</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/item.js"></script>
+  <script>
+    Auth.requireAuth();
+  </script>
+</body>
+</html>

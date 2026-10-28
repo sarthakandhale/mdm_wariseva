@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register Account – ReuniteAI</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body>
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+
+  <div class="auth-wrapper">
+    <div class="glass-card" style="width: 100%; max-width: 520px; padding: 2.25rem;">
+      <div style="text-align: center; margin-bottom: 1.5rem;">
+        <a href="index.html" class="brand-logo justify-center" style="margin-bottom: 0.5rem;">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Reunite<span>AI</span></div>
+        </a>
+        <h2 style="font-size: 1.35rem;">Create Account</h2>
+        <p style="color: var(--text-secondary); font-size: 0.85rem;">Register for Puri Jagannath Rath Yatra Reunification Portal</p>
+      </div>
+
+      <div id="registerAlert" style="display:none; margin-bottom: 1.25rem;" class="toast toast-error"></div>
+
+      <form id="registerForm" onsubmit="handleRegisterSubmit(event)">
+        <!-- Full Name -->
+        <div class="form-group">
+          <label class="form-label" for="regFullName">Full Name *</label>
+          <input type="text" id="regFullName" class="form-control" placeholder="e.g. Inspector Ramesh Dash" required onblur="validateField('name')">
+          <div class="invalid-feedback"></div>
+        </div>
+
+        <!-- Mobile & Language Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="regMobile">Indian Mobile Number *</label>
+            <input type="tel" id="regMobile" class="form-control" placeholder="10-digit Mobile" maxlength="10" required onblur="validateField('mobile')">
+            <div class="invalid-feedback"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="regLanguage">Preferred Language</label>
+            <select id="regLanguage" class="form-select">
+              <option value="en">English</option>
+              <option value="or">Odia (ଓଡ଼ିଆ)</option>
+              <option value="hi">Hindi (हिंदी)</option>
+              <option value="bn">Bengali (বাংলা)</option>
+              <option value="te">Telugu (తెలుగు)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label" for="regEmail">Email Address (Optional)</label>
+          <input type="email" id="regEmail" class="form-control" placeholder="name@domain.com" onblur="validateField('email')">
+          <div class="invalid-feedback"></div>
+        </div>
+
+        <!-- Role Selector -->
+        <div class="form-group">
+          <label class="form-label" for="regRole">Select Primary User Role *</label>
+          <select id="regRole" class="form-select" onchange="handleRoleChange()" required>
+            <option value="PARENT_GUARDIAN">Parent / Guardian (Instant Access)</option>
+            <option value="VOLUNTEER">Ground Volunteer (Requires Approval)</option>
+            <option value="POLICE_OFFICER">Police Officer (Requires Institutional Approval)</option>
+            <option value="MEDICAL_STAFF">Medical Staff (Requires Institutional Approval)</option>
+            <option value="HELP_CENTER_OPERATOR">Help Center Operator (Requires Approval)</option>
+            <option value="EVENT_ADMIN">Event Administrator (Requires Super Admin Approval)</option>
+          </select>
+          <div id="roleInfoNote" style="font-size:0.775rem; color:var(--color-accent-gold); margin-top:0.3rem;">
+            ℹ️ Parent accounts are activated immediately upon registration.
+          </div>
+        </div>
+
+        <!-- Password Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="regPassword">Password *</label>
+            <input type="password" id="regPassword" class="form-control" placeholder="Min 8 chars, 1 upper/special" required onblur="validateField('password')">
+            <div class="invalid-feedback"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="regConfirmPassword">Confirm Password *</label>
+            <input type="password" id="regConfirmPassword" class="form-control" placeholder="Re-type password" required onblur="validateField('confirm')">
+            <div class="invalid-feedback"></div>
+          </div>
+        </div>
+
+        <button type="submit" id="regSubmitBtn" class="btn btn-primary btn-block" style="margin-top:0.75rem;">
+          Register Account
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 1.25rem; font-size: 0.875rem; color: var(--text-secondary);">
+        Already registered? <a href="login.html" style="font-weight: 600;">Sign In</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/validators.js"></script>
+  <script>
+    function handleRoleChange() {
+      const role = document.getElementById('regRole').value;
+      const note = document.getElementById('roleInfoNote');
+      if (role === 'PARENT_GUARDIAN') {
+        note.innerHTML = '⚡ <strong>Instant Access:</strong> Parent accounts are activated immediately.';
+        note.style.color = 'var(--color-accent-emerald)';
+      } else {
+        note.innerHTML = '🔒 <strong>Approval Required:</strong> Institutional & Volunteer accounts require Admin approval before login.';
+        note.style.color = 'var(--color-accent-gold)';
+      }
+    }
+
+    function validateField(type) {
+      if (type === 'name') {
+        const res = Validators.validateName(document.getElementById('regFullName').value);
+        if (!res.valid) Validators.showFieldError(document.getElementById('regFullName'), res.message);
+        else Validators.clearFieldError(document.getElementById('regFullName'));
+      } else if (type === 'mobile') {
+        const res = Validators.validateMobile(document.getElementById('regMobile').value);
+        if (!res.valid) Validators.showFieldError(document.getElementById('regMobile'), res.message);
+        else Validators.clearFieldError(document.getElementById('regMobile'));
+      } else if (type === 'email') {
+        const res = Validators.validateEmail(document.getElementById('regEmail').value);
+        if (!res.valid) Validators.showFieldError(document.getElementById('regEmail'), res.message);
+        else Validators.clearFieldError(document.getElementById('regEmail'));
+      } else if (type === 'password') {
+        const res = Validators.validatePassword(document.getElementById('regPassword').value);
+        if (!res.valid) Validators.showFieldError(document.getElementById('regPassword'), res.message);
+        else Validators.clearFieldError(document.getElementById('regPassword'));
+      } else if (type === 'confirm') {
+        const res = Validators.validateConfirmPassword(document.getElementById('regPassword').value, document.getElementById('regConfirmPassword').value);
+        if (!res.valid) Validators.showFieldError(document.getElementById('regConfirmPassword'), res.message);
+        else Validators.clearFieldError(document.getElementById('regConfirmPassword'));
+      }
+    }
+
+    async function handleRegisterSubmit(e) {
+      e.preventDefault();
+      const alertBox = document.getElementById('registerAlert');
+      const btn = document.getElementById('regSubmitBtn');
+      alertBox.style.display = 'none';
+
+      const payload = {
+        full_name: document.getElementById('regFullName').value,
+        mobile: document.getElementById('regMobile').value,
+        email: document.getElementById('regEmail').value,
+        role: document.getElementById('regRole').value,
+        preferred_language: document.getElementById('regLanguage').value,
+        password: document.getElementById('regPassword').value,
+        confirm_password: document.getElementById('regConfirmPassword').value
+      };
+
+      btn.disabled = true;
+      btn.innerText = 'Creating Account...';
+
+      const res = await APIClient.post('/api/auth/register', payload);
+
+      btn.disabled = false;
+      btn.innerText = 'Register Account';
+
+      if (res.success) {
+        if (res.data.requires_approval) {
+          Auth.showToast('Registration submitted! Your account is PENDING approval.', 'info');
+          alertBox.className = 'toast toast-info';
+          alertBox.innerText = 'Registration successful! Your account status is PENDING administrative approval. You will be able to log in once an Admin approves your account.';
+          alertBox.style.display = 'flex';
+        } else {
+          Auth.showToast('Account created successfully! Redirecting to login...', 'success');
+          setTimeout(() => window.location.href = '/login.html?registered=1', 1200);
+        }
+      } else {
+        alertBox.className = 'toast toast-error';
+        alertBox.innerText = res.message || 'Registration failed.';
+        alertBox.style.display = 'flex';
+      }
+    }
+  </script>
+</body>
+</html>

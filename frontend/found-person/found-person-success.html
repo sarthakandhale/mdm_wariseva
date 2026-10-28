@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Found Person Registered – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <div class="main-wrapper" style="margin-left:0; width:100%;">
+      <main class="dashboard-content" style="padding-top:4rem;">
+        <div style="max-width: 650px; margin: 0 auto; text-align: center;">
+          <div class="glass-card" style="padding: 3rem; border-top: 5px solid var(--color-success);">
+            <div style="font-size:4rem; margin-bottom:1rem;">🟢</div>
+            <h2 style="font-size:1.8rem; margin-bottom:0.5rem;">Found Person Report Registered</h2>
+            <p style="color:var(--text-secondary); margin-bottom:1.5rem;">
+              The found pilgrim record has been saved and assigned to a safe assistance location.
+            </p>
+
+            <div id="foundSummaryBox" style="padding:1.25rem; background:rgba(15,23,42,0.8); border:1px solid var(--bg-card-border); border-radius:var(--radius-md); text-align:left; margin-bottom:2rem;"></div>
+
+            <div class="d-flex justify-center gap-3">
+              <a href="../found-person/found-person-cases.html" class="btn btn-primary">Safe Custody Console</a>
+              <a href="../index.html" class="btn btn-secondary">Return to Portal Home</a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function loadSuccessSummary() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const caseId = urlParams.get('case_id');
+      if (!caseId) return;
+
+      const res = await APIClient.get(`/api/found-person/cases/${caseId}`);
+      if (res.success) {
+        const c = res.data;
+        const box = document.getElementById('foundSummaryBox');
+        box.innerHTML = `
+          <div style="font-size:0.9rem; display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+            <div><span style="color:var(--text-muted)">Case Number:</span> <strong style="font-family:monospace;">${c.case_number}</strong></div>
+            <div><span style="color:var(--text-muted)">Temporary Code:</span> <strong style="font-family:monospace;">${c.temporary_person_id}</strong></div>
+            <div><span style="color:var(--text-muted)">Stated Name:</span> <strong>${c.approximate_name}</strong></div>
+            <div><span style="color:var(--text-muted)">Safe Location:</span> <strong style="color:var(--color-primary);">${c.safe_location.location_name || 'Help Center'}</strong></div>
+          </div>
+        `;
+      }
+    }
+    loadSuccessSummary();
+  </script>
+</body>
+</html>

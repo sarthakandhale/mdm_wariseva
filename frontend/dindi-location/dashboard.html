@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dindi Location Console – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">📍</div>
+          <div class="brand-text">Location<span>Console</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../dindi-location/dashboard.html">📍 Location Dashboard</a></li>
+        <li class="sidebar-item"><a href="../map/wari-map.html">🗺️ Interactive Wari Map</a></li>
+        <li class="sidebar-item"><a href="../dindi-leader/dashboard.html">👮 Leader Desk</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Dindi Movement & Checkpoint Control Desk</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+          <!-- Update Dindi Location Form -->
+          <div class="glass-card" style="padding:1.75rem; border-top:4px solid var(--color-primary);">
+            <h3 style="margin-bottom:0.5rem;">📍 Update Dindi Current Location</h3>
+            <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:1.25rem;">
+              Capture current GPS coordinates or enter manual location.
+            </p>
+
+            <form onsubmit="handleUpdateLocationSubmit(event)">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="locLat">Latitude *</label>
+                  <input type="number" step="any" id="locLat" class="form-control" value="18.3450000" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="locLon">Longitude *</label>
+                  <input type="number" step="any" id="locLon" class="form-control" value="74.0320000" required>
+                </div>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="locSource">Location Source</label>
+                  <select id="locSource" class="form-select">
+                    <option value="GPS" selected>GPS</option>
+                    <option value="MANUAL">Manual</option>
+                    <option value="CHECKPOINT">Checkpoint</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="locStatus">Movement Status</label>
+                  <select id="locStatus" class="form-select">
+                    <option value="MOVING" selected>Moving</option>
+                    <option value="RESTING">Resting</option>
+                    <option value="DELAYED">Delayed</option>
+                    <option value="STOPPED">Stopped</option>
+                  </select>
+                </div>
+              </div>
+
+              <button type="submit" id="submitLocBtn" class="btn btn-primary btn-block">📍 UPDATE DINDI LOCATION</button>
+            </form>
+          </div>
+
+          <!-- Official Checkpoint Check-in -->
+          <div class="glass-card" style="padding:1.75rem; border-top:4px solid var(--color-success);">
+            <h3 style="margin-bottom:0.5rem;">🚩 Official Checkpoint Check-in</h3>
+            <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:1.25rem;">
+              Register Palkhi passage check-in at official route checkpoints.
+            </p>
+
+            <form onsubmit="handleCheckpointCheckinSubmit(event)">
+              <div class="form-group">
+                <label class="form-label" for="checkinPoint">Select Checkpoint *</label>
+                <select id="checkinPoint" class="form-select">
+                  <option value="4" selected>Checkpoint 3 - Saswad Route Desk</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="checkinStatus">Check-in Status</label>
+                <select id="checkinStatus" class="form-select">
+                  <option value="PASSED" selected>Passed Cleanly</option>
+                  <option value="HALTED">Halted for Tea/Food</option>
+                  <option value="DELAYED">Delayed due to Crowd</option>
+                </select>
+              </div>
+
+              <button type="submit" id="submitCheckinBtn" class="btn btn-success btn-block" style="margin-top:2.2rem;">🏁 CHECK IN AT CHECKPOINT</button>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/route-map.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function handleCheckpointCheckinSubmit(e) {
+      e.preventDefault();
+      const payload = {
+        dindi_id: 1,
+        status: document.getElementById('checkinStatus').value
+      };
+
+      const res = await APIClient.post('/api/checkpoints/4/checkin', payload);
+      if (res.success) {
+        Auth.showToast('Successfully checked in at Checkpoint 3!', 'success');
+        setTimeout(() => window.location.reload(), 800);
+      } else {
+        Auth.showToast(res.message, 'error');
+      }
+    }
+  </script>
+</body>
+</html>

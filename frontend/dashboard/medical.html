@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medical Staff Portal – ReuniteAI</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Reunite<span>AI</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../dashboard/medical.html">🩺 Medical Camp Console</a></li>
+        <li class="sidebar-item"><a href="../medical/report-emergency.html">🚨 File Emergency Case</a></li>
+        <li class="sidebar-item"><a href="../medical/my-medical-cases.html">📋 Active Medical Cases</a></li>
+        <li class="sidebar-item"><a href="../medical-staff/treatment.html">💊 Clinical Treatment Log</a></li>
+        <li class="sidebar-item"><a href="../found-person/report-found.html">📷 Unidentified Patient Log</a></li>
+        <li class="sidebar-item"><a href="../ai/person-matches.html">🤖 AI Patient Search</a></li>
+        <li class="sidebar-item"><a href="../medical/nearby-medical-help.html">🏥 Route Tents & Ambulances</a></li>
+        <li class="sidebar-item"><a href="../map/wari-map.html">🗺️ Interactive Emergency Map</a></li>
+        <li class="sidebar-item"><a href="../profile.html">👤 My Profile</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Medical Operations Console – Emergency First Aid & Hospital Desk</h3>
+        </div>
+        <div class="navbar-right">
+          <div class="user-profile-btn" onclick="window.location.href="../profile.html"">
+            <div class="avatar-circle" id="navUserAvatar">M</div>
+            <div>
+              <div id="navUserName" style="font-weight:600;font-size:0.875rem;">Dr. Ananya Dash</div>
+              <div id="navUserRole" style="font-size:0.75rem;color:var(--color-accent-gold);">MEDICAL STAFF</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div class="stat-grid">
+          <div class="glass-card stat-card">
+            <div class="stat-header"><span>Hospital Admissions</span><div class="stat-icon">🏥</div></div>
+            <div class="stat-value">Active</div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-header"><span>Unidentified Patients</span><div class="stat-icon">❓</div></div>
+            <div class="stat-value">Logged</div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-header"><span>Ambulance Standby</span><div class="stat-icon">🚑</div></div>
+            <div class="stat-value">On Duty</div>
+          </div>
+        </div>
+
+        <h3 style="margin-bottom: 1rem;">Medical Operations Workbench</h3>
+        <div class="placeholder-grid">
+          <div class="glass-card module-card">
+            <h4>🚨 File Medical Case / Emergency Triage</h4>
+            <p>File medical emergency case with deterministic priority scoring (CRITICAL, HIGH, MEDIUM, LOW) and ambulance request.</p>
+            <div style="margin-top:1rem;">
+              <a href="../medical/report-emergency.html" class="btn btn-danger btn-sm">Report Emergency</a>
+              <a href="../medical/my-medical-cases.html" class="btn btn-secondary btn-sm">View Medical Directory</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>💊 Clinical Treatment & Referral Notes</h4>
+            <p>Update patient clinical records, diagnosis notes, referral transfers, and discharge verification.</p>
+            <div style="margin-top:1rem;">
+              <a href="../medical-staff/treatment.html" class="btn btn-primary btn-sm">Clinical Treatment Log</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>📷 Log Unidentified Patient</h4>
+            <p>Register injured, elderly, or unconscious pilgrims admitted at medical tents to trigger AI biometric family matching.</p>
+            <div style="margin-top:1rem;">
+              <a href="../found-person/report-found.html" class="btn btn-success btn-sm">Register Unidentified Patient</a>
+              <a href="../ai/person-matches.html" class="btn btn-secondary btn-sm">AI Biometric Matcher</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🏥 Route Tents & Ambulance Standby</h4>
+            <p>Find nearby medical camps along event route, dispatch emergency ambulances, and track hospital bed availability.</p>
+            <div style="margin-top:1rem;">
+              <a href="../medical/nearby-medical-help.html" class="btn btn-warning btn-sm">Find Medical Tents</a>
+              <a href="../map/wari-map.html" class="btn btn-secondary btn-sm">Emergency Route Map</a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>Auth.requireAuth(['MEDICAL_STAFF', 'SUPER_ADMIN']);</script>
+</body>
+</html>

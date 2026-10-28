@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users Directory – ReuniteAI Platform</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Reunite<span>AI</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item"><a href="../admin/dashboard.html">📊 System Statistics</a></li>
+        <li class="sidebar-item"><a href="../admin/pending-users.html">⌛ Pending Approvals</a></li>
+        <li class="sidebar-item active"><a href="../admin/users.html">👥 Users Directory</a></li>
+        <li class="sidebar-item"><a href="../admin/audit-logs.html">📜 Security Audit Logs</a></li>
+        <li class="sidebar-item"><a href="../profile.html">👤 My Profile</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>User Directory & Role Access Control</h3>
+        </div>
+        <div class="navbar-right">
+          <div class="user-profile-btn" onclick="window.location.href="../profile.html"">
+            <div class="avatar-circle" id="navUserAvatar">A</div>
+            <div>
+              <div id="navUserName" style="font-weight:600;font-size:0.875rem;">Administrator</div>
+              <div id="navUserRole" style="font-size:0.75rem;color:var(--color-accent-gold);">SUPER ADMIN</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <!-- Search and Filters bar -->
+        <div class="glass-card d-flex align-center justify-between" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+          <div class="d-flex align-center gap-2" style="flex-grow: 1;">
+            <input type="text" id="searchUsersInput" class="form-control" placeholder="Search name, mobile, email..." style="max-width:300px;" onkeyup="loadAllUsers()">
+            
+            <select id="filterStatus" class="form-select" style="max-width:160px;" onchange="loadAllUsers()">
+              <option value="">All Statuses</option>
+              <option value="ACTIVE">ACTIVE</option>
+              <option value="PENDING">PENDING</option>
+              <option value="SUSPENDED">SUSPENDED</option>
+              <option value="BLOCKED">BLOCKED</option>
+              <option value="REJECTED">REJECTED</option>
+            </select>
+
+            <select id="filterRole" class="form-select" style="max-width:200px;" onchange="loadAllUsers()">
+              <option value="">All Roles</option>
+              <option value="PARENT_GUARDIAN">Parent / Guardian</option>
+              <option value="VOLUNTEER">Volunteer</option>
+              <option value="POLICE_OFFICER">Police Officer</option>
+              <option value="MEDICAL_STAFF">Medical Staff</option>
+              <option value="HELP_CENTER_OPERATOR">Help Center Operator</option>
+              <option value="EVENT_ADMIN">Event Admin</option>
+              <option value="SUPER_ADMIN">Super Admin</option>
+            </select>
+          </div>
+
+          <button class="btn btn-secondary btn-sm" onclick="loadAllUsers()">🔄 Refresh Directory</button>
+        </div>
+
+        <!-- Users Table -->
+        <div class="glass-card table-responsive" id="allUsersTable">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>User / UUID</th>
+                <th>Mobile Number</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Last Login</th>
+                <th>Admin Actions</th>
+              </tr>
+            </thead>
+            <tbody id="allUsersTableBody">
+              <!-- Dynamically Populated by dashboard.js -->
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/dashboard.js"></script>
+  <script>
+    Auth.requireAuth(['EVENT_ADMIN', 'SUPER_ADMIN']);
+  </script>
+</body>
+</html>

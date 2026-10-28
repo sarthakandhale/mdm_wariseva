@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reunification Handover – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <div class="main-wrapper" style="margin-left:0; width:100%;">
+      <main class="dashboard-content" style="padding-top:3rem;">
+        <div style="max-width: 600px; margin: 0 auto;">
+          <div class="glass-card" style="padding: 2.25rem; border-top:5px solid var(--color-success);">
+            <h2 style="font-size: 1.4rem; margin-bottom: 0.5rem;">🤝 Official Reunification Handover</h2>
+            <p style="color:var(--text-secondary); font-size:0.875rem; margin-bottom:1.5rem;">
+              Formal handover to family guardian or Dindi leader. Updates case status to REUNITED and logs official audit record.
+            </p>
+
+            <form id="reunificationForm" onsubmit="handleReunificationSubmit(event)">
+              <div class="form-group">
+                <label class="form-label" for="reunitedWith">Reunited With (Name & Relationship) *</label>
+                <input type="text" id="reunitedWith" class="form-control" placeholder="e.g. Rajesh Patil (Father)" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="reunificationLoc">Reunification Location *</label>
+                <input type="text" id="reunificationLoc" class="form-control" value="Saswad Help Center No. 2" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="reunificationNotes">Handover Notes & Id Verification Check</label>
+                <textarea id="reunificationNotes" class="form-control" rows="3" placeholder="Verify receiver ID and physical match details..."></textarea>
+              </div>
+
+              <div class="d-flex justify-between align-center" style="margin-top: 1.75rem;">
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                <button type="submit" class="btn btn-success">🤝 Complete Official Reunification</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function handleReunificationSubmit(e) {
+      e.preventDefault();
+      const urlParams = new URLSearchParams(window.location.search);
+      const caseId = urlParams.get('case_id');
+
+      const payload = {
+        reunited_with: document.getElementById('reunitedWith').value.trim(),
+        reunification_location: document.getElementById('reunificationLoc').value.trim(),
+        notes: document.getElementById('reunificationNotes').value.trim()
+      };
+
+      const res = await APIClient.post(`/api/found-person/cases/${caseId}/reunification`, payload);
+      if (res.success) {
+        Auth.showToast('Reunification completed successfully!', 'success');
+        setTimeout(() => {
+          window.location.href = `/found-person/found-person-cases.html`;
+        }, 800);
+      } else {
+        Auth.showToast(res.message, 'error');
+      }
+    }
+  </script>
+</body>
+</html>

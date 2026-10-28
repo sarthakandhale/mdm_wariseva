@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Family Group – ReuniteAI</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Reunite<span>AI</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item"><a href="../family/family-dashboard.html">← Back to Family Dashboard</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Create Family Group</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div style="max-width: 680px; margin: 0 auto;">
+          <div class="glass-card" style="padding: 2.25rem;">
+            <h2 style="font-size: 1.4rem; margin-bottom: 0.5rem;">Register New Family Group</h2>
+            <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1.75rem;">
+              A family group organizes all traveling relatives & companions under a single primary guardian for Puri Rath Yatra safety monitoring.
+            </p>
+
+            <form id="createFamilyForm" onsubmit="handleCreateFamilySubmit(event)">
+              <div class="form-group">
+                <label class="form-label" for="famName">Family Name *</label>
+                <input type="text" id="famName" class="form-control" placeholder="e.g. Patil Family or Dash Pilgrimage Group" required>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="famPrimaryName">Primary Guardian Name *</label>
+                  <input type="text" id="famPrimaryName" class="form-control" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="famPrimaryMobile">Primary Mobile Number *</label>
+                  <input type="tel" id="famPrimaryMobile" class="form-control" placeholder="10-digit Indian Mobile" maxlength="10" required>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="famEmergencyName">Emergency Contact Name *</label>
+                  <input type="text" id="famEmergencyName" class="form-control" placeholder="Emergency Relative Name" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="famEmergencyMobile">Emergency Mobile Number *</label>
+                  <input type="tel" id="famEmergencyMobile" class="form-control" placeholder="10-digit Mobile" maxlength="10" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="famLanguage">Preferred Language</label>
+                <select id="famLanguage" class="form-select">
+                  <option value="or">Odia (ଓଡ଼ିଆ)</option>
+                  <option value="en" selected>English</option>
+                  <option value="hi">Hindi (हिंदी)</option>
+                  <option value="mr">Marathi (मराठी)</option>
+                  <option value="bn">Bengali (বাংলা)</option>
+                  <option value="te">Telugu (తెలుగు)</option>
+                  <option value="ta">Tamil (தமிழ்)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="famNotes">Optional Travel Notes / Hotel Details</label>
+                <textarea id="famNotes" class="form-control" rows="3" placeholder="e.g. Staying near Grand Road Shelter No. 4 from July 10-14"></textarea>
+              </div>
+
+              <div class="d-flex justify-between align-center" style="margin-top: 1.5rem;">
+                <a href="../family/family-dashboard.html" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Create Family Group</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/validators.js"></script>
+  <script src="../assets/js/family.js"></script>
+  <script>
+    Auth.requireAuth();
+    // Pre-fill primary contact from logged in user
+    const u = Auth.getCurrentUser();
+    if (u) {
+      document.getElementById('famPrimaryName').value = u.full_name || '';
+      document.getElementById('famPrimaryMobile').value = u.mobile || '';
+    }
+  </script>
+</body>
+</html>

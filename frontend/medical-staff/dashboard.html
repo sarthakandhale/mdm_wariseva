@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medical Staff Triage Console – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🩺</div>
+          <div class="brand-text">Wari<span>Medical</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../medical-staff/dashboard.html">🩺 Triage & Active Cases</a></li>
+        <li class="sidebar-item"><a href="../medical/report-emergency.html">🚨 Report Emergency</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Medical Staff Triage & Clinical Console</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content" id="medicalStaffDashboard">
+        
+        <!-- Metrics Bar -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+          <div class="glass-card" style="padding: 1.25rem;">
+            <div style="font-size:0.8rem; color:var(--text-muted);">TOTAL CASES</div>
+            <div style="font-size:2rem; font-weight:700;" id="statTotalCases">0</div>
+          </div>
+          <div class="glass-card" style="padding: 1.25rem;">
+            <div style="font-size:0.8rem; color:var(--text-muted);">ACTIVE CASES</div>
+            <div style="font-size:2rem; font-weight:700; color:var(--color-primary);" id="statActiveCases">0</div>
+          </div>
+          <div class="glass-card" style="padding: 1.25rem; border-top: 3px solid var(--color-accent-crimson);">
+            <div style="font-size:0.8rem; color:var(--color-accent-crimson);">CRITICAL CASES</div>
+            <div style="font-size:2rem; font-weight:700; color:var(--color-accent-crimson);" id="statCriticalCases">0</div>
+          </div>
+          <div class="glass-card" style="padding: 1.25rem;">
+            <div style="font-size:0.8rem; color:var(--text-muted);">CAMPS AVAILABLE</div>
+            <div style="font-size:2rem; font-weight:700; color:var(--color-accent-emerald);" id="statCampsAvailable">0</div>
+          </div>
+          <div class="glass-card" style="padding: 1.25rem;">
+            <div style="font-size:0.8rem; color:var(--text-muted);">AMBULANCES AVAIL.</div>
+            <div style="font-size:2rem; font-weight:700; color:var(--color-accent-gold);" id="statAmbulancesAvailable">0</div>
+          </div>
+        </div>
+
+        <!-- Triage Table -->
+        <div class="glass-card" style="padding: 1.75rem;">
+          <h2 style="font-size: 1.3rem; margin-bottom: 1.25rem;">Active Emergency Triage Queue</h2>
+          
+          <div style="overflow-x: auto;">
+            <table class="table" style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="text-align: left; border-bottom: 1px solid var(--bg-card-border);">
+                  <th style="padding: 0.75rem;">Case #</th>
+                  <th style="padding: 0.75rem;">Patient</th>
+                  <th style="padding: 0.75rem;">Category</th>
+                  <th style="padding: 0.75rem;">Priority</th>
+                  <th style="padding: 0.75rem;">Zone</th>
+                  <th style="padding: 0.75rem;">Status</th>
+                  <th style="padding: 0.75rem;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="activeCasesTableContainer">
+                <!-- Dynamically loaded -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/medical.js"></script>
+  <script>
+    Auth.requireAuth();
+  </script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Family Group – ReuniteAI</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Reunite<span>AI</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item"><a href="../family/family-dashboard.html">← Back to Family Dashboard</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Edit Family Group</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div style="max-width: 680px; margin: 0 auto;">
+          <div class="glass-card" style="padding: 2.25rem;">
+            <h2 style="font-size: 1.4rem; margin-bottom: 0.5rem;" id="editFamilyHeader">Edit Family Details</h2>
+
+            <form id="editFamilyForm" onsubmit="handleEditFamilySubmit(event)">
+              <div class="form-group">
+                <label class="form-label" for="editFamName">Family Name *</label>
+                <input type="text" id="editFamName" class="form-control" required>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="editPrimaryName">Primary Contact Name</label>
+                  <input type="text" id="editPrimaryName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="editPrimaryMobile">Primary Mobile Number</label>
+                  <input type="tel" id="editPrimaryMobile" class="form-control" maxlength="10" required>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="editEmergencyName">Emergency Contact Name</label>
+                  <input type="text" id="editEmergencyName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="editEmergencyMobile">Emergency Mobile Number</label>
+                  <input type="tel" id="editEmergencyMobile" class="form-control" maxlength="10" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="editFamNotes">Travel Notes</label>
+                <textarea id="editFamNotes" class="form-control" rows="3"></textarea>
+              </div>
+
+              <div class="d-flex justify-between align-center" style="margin-top: 1.5rem;">
+                <a href="../family/family-dashboard.html" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Family Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/validators.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function loadEditFamilyPage() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const familyId = urlParams.get('id');
+      if (!familyId) return;
+
+      const res = await APIClient.get(`/api/families/${familyId}`);
+      if (res.success) {
+        const f = res.data;
+        document.getElementById('editFamilyHeader').innerText = `Edit: ${f.family_name} (${f.family_code})`;
+        document.getElementById('editFamName').value = f.family_name || '';
+        document.getElementById('editPrimaryName').value = f.primary_contact_name || '';
+        document.getElementById('editPrimaryMobile').value = f.primary_contact_mobile || '';
+        document.getElementById('editEmergencyName').value = f.emergency_contact_name || '';
+        document.getElementById('editEmergencyMobile').value = f.emergency_contact_mobile || '';
+        document.getElementById('editFamNotes').value = f.notes || '';
+      }
+    }
+
+    async function handleEditFamilySubmit(e) {
+      e.preventDefault();
+      const urlParams = new URLSearchParams(window.location.search);
+      const familyId = urlParams.get('id');
+
+      const payload = {
+        family_name: document.getElementById('editFamName').value.trim(),
+        primary_contact_name: document.getElementById('editPrimaryName').value.trim(),
+        primary_contact_mobile: document.getElementById('editPrimaryMobile').value.trim(),
+        emergency_contact_name: document.getElementById('editEmergencyName').value.trim(),
+        emergency_contact_mobile: document.getElementById('editEmergencyMobile').value.trim(),
+        notes: document.getElementById('editFamNotes').value.trim()
+      };
+
+      const res = await APIClient.put(`/api/families/${familyId}`, payload);
+      if (res.success) {
+        Auth.showToast('Family updated successfully!', 'success');
+        setTimeout(() => {
+          window.location.href = `/family/family-dashboard.html`;
+        }, 800);
+      } else {
+        Auth.showToast(res.message, 'error');
+      }
+    }
+
+    loadEditFamilyPage();
+  </script>
+</body>
+</html>

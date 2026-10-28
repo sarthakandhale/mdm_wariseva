@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Executive Admin Dashboard – ReuniteAI Platform</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Reunite<span>AI</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../admin/dashboard.html">📊 Executive Overview</a></li>
+        <li class="sidebar-item"><a href="../admin/pending-users.html">⌛ Pending User Approvals</a></li>
+        <li class="sidebar-item"><a href="../admin/users.html">👥 Users Directory</a></li>
+        <li class="sidebar-item"><a href="../admin/audit-logs.html">📜 Security Audit Logs</a></li>
+        <li class="sidebar-item"><a href="../ai/dashboard.html">🤖 AI Matcher Console</a></li>
+        <li class="sidebar-item"><a href="../ai/person-matches.html">👤 AI Person Matches</a></li>
+        <li class="sidebar-item"><a href="../ai/item-matches.html">🎒 AI Item Matches</a></li>
+        <li class="sidebar-item"><a href="../coordinator/volunteers/recommendations.html?task_id=1">🤝 Volunteer Assignment Desk</a></li>
+        <li class="sidebar-item"><a href="../map/wari-map.html">🗺️ Wari Route Map</a></li>
+        <li class="sidebar-item"><a href="../profile.html">👤 My Profile</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Executive System Administrator Portal</h3>
+        </div>
+        <div class="navbar-right">
+          <div class="user-profile-btn" onclick="window.location.href="../profile.html"">
+            <div class="avatar-circle" id="navUserAvatar">A</div>
+            <div>
+              <div id="navUserName" style="font-weight:600;font-size:0.875rem;">Administrator</div>
+              <div id="navUserRole" style="font-size:0.75rem;color:var(--color-accent-gold);">SUPER ADMIN</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <!-- Stat Grid -->
+        <div class="stat-grid">
+          <div class="glass-card stat-card">
+            <div class="stat-header">
+              <span>Total Registered Users</span>
+              <div class="stat-icon">👥</div>
+            </div>
+            <div class="stat-value" id="statTotalUsers">9</div>
+          </div>
+
+          <div class="glass-card stat-card" style="border-left: 3px solid var(--color-accent-gold);">
+            <div class="stat-header">
+              <span>Pending Approvals</span>
+              <div class="stat-icon" style="color:var(--color-accent-gold);background:rgba(245,158,11,0.15)">⌛</div>
+            </div>
+            <div class="stat-value" id="statPendingUsers">2</div>
+          </div>
+
+          <div class="glass-card stat-card" style="border-left: 3px solid var(--color-accent-emerald);">
+            <div class="stat-header">
+              <span>Active System Modules</span>
+              <div class="stat-icon" style="color:var(--color-accent-emerald);background:rgba(16,185,129,0.15)">✅</div>
+            </div>
+            <div class="stat-value">10 / 10</div>
+          </div>
+
+          <div class="glass-card stat-card" style="border-left: 3px solid #38bdf8;">
+            <div class="stat-header">
+              <span>System Roles</span>
+              <div class="stat-icon" style="color:#38bdf8;background:rgba(56,189,248,0.15)">🛡️</div>
+            </div>
+            <div class="stat-value">7</div>
+          </div>
+        </div>
+
+        <!-- Action Quick Links -->
+        <div class="d-flex justify-between align-center" style="margin-bottom: 1.5rem;">
+          <h2>Platform Management Hub</h2>
+          <div class="d-flex gap-2">
+            <a href="../admin/pending-users.html" class="btn btn-warning">Review Pending Approvals</a>
+            <a href="../admin/users.html" class="btn btn-primary">Manage Users Directory</a>
+          </div>
+        </div>
+
+        <!-- System Modules Hub -->
+        <div class="placeholder-grid">
+          <div class="glass-card module-card">
+            <h4>👥 Module 1 – RBAC & User Approvals</h4>
+            <p>Platform identity control, approval workflow for pending role registrations, and security audit logs.</p>
+            <div style="margin-top:1rem;">
+              <a href="../admin/pending-users.html" class="btn btn-warning btn-sm">Pending Approvals</a>
+              <a href="../admin/audit-logs.html" class="btn btn-secondary btn-sm">Audit Logs</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>👨‍👩‍👧 Module 2 – Family & Profile Management</h4>
+            <p>Family group registrations (`RY-FAM-XXXXXX`), member profiles (`RY-PER-XXXXXX`), and physical descriptions.</p>
+            <div style="margin-top:1rem;">
+              <a href="../family/family-dashboard.html" class="btn btn-primary btn-sm">Family Portal</a>
+              <a href="../person/add-person.html" class="btn btn-secondary btn-sm">Register Person</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🚨 Module 4 & 5 – Lost & Found Person Cases</h4>
+            <p>Missing person case filing (`WS-LP-XXXXXX`), safe custody registrations (`WS-FP-XXXXXX`), and police overrides.</p>
+            <div style="margin-top:1rem;">
+              <a href="../lost-person/report-lost.html" class="btn btn-danger btn-sm">File Missing Case</a>
+              <a href="../found-person/report-found.html" class="btn btn-success btn-sm">Register Found Person</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🤖 Module 7 – AI Biometric Matching Engine</h4>
+            <p>Weighted similarity scoring (Pipeline A & B), human-readable match explanations, and AI metrics console.</p>
+            <div style="margin-top:1rem;">
+              <a href="../ai/person-matches.html" class="btn btn-primary btn-sm">Person Matcher</a>
+              <a href="../ai/item-matches.html" class="btn btn-secondary btn-sm">Item Matcher</a>
+              <a href="../ai/dashboard.html" class="btn btn-warning btn-sm" style="margin-top:0.5rem;display:inline-block;">AI Console</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🎒 Module 6 – Lost & Found Item Management</h4>
+            <p>Lost property reporting, found item custody lockers, IMEI masking, and multi-factor owner claims.</p>
+            <div style="margin-top:1rem;">
+              <a href="../lost-items/report-lost-item.html" class="btn btn-primary btn-sm">Report Lost Item</a>
+              <a href="../found-items/found-items.html" class="btn btn-secondary btn-sm">Found Items & Lockers</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🤝 Module 10 – Volunteer Management</h4>
+            <p>100% Rule-Based volunteer task assignment engine, sector deployments, and shift duty tracking.</p>
+            <div style="margin-top:1rem;">
+              <a href="../coordinator/volunteers/recommendations.html?task_id=1" class="btn btn-warning btn-sm">Volunteer Task Console</a>
+              <a href="../volunteer/register.html" class="btn btn-secondary btn-sm">Volunteer Register</a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/dashboard.js"></script>
+  <script>
+    Auth.requireAuth(['EVENT_ADMIN', 'SUPER_ADMIN']);
+
+    async function loadStats() {
+      const resAll = await APIClient.get('/api/admin/users?limit=1');
+      if (resAll.success) {
+        document.getElementById('statTotalUsers').innerText = resAll.data.total;
+      }
+      const resPending = await APIClient.get('/api/admin/users/pending?limit=1');
+      if (resPending.success) {
+        document.getElementById('statPendingUsers').innerText = resPending.data.total;
+      }
+    }
+    loadStats();
+  </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Identity Verification – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <div class="main-wrapper" style="margin-left:0; width:100%;">
+      <main class="dashboard-content" style="padding-top:3rem;">
+        <div style="max-width: 600px; margin: 0 auto;">
+          <div class="glass-card" style="padding: 2.25rem;">
+            <h2 style="font-size: 1.4rem; margin-bottom: 0.5rem;">Perform Identity Verification</h2>
+            <p style="color:var(--text-secondary); font-size:0.875rem; margin-bottom:1.5rem;">
+              Authorized personnel must verify identity clues or family confirmation before authorizing formal reunification handover.
+            </p>
+
+            <form id="verificationForm" onsubmit="handleVerificationSubmit(event)">
+              <div class="form-group">
+                <label class="form-label" for="verifyStatus">Verification Status *</label>
+                <select id="verifyStatus" class="form-select" required>
+                  <option value="VERIFIED" selected>Verified Identity Confirmed</option>
+                  <option value="IN_PROGRESS">Verification In Progress</option>
+                  <option value="REJECTED">Verification Rejected / Unmatched</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="verifyMethod">Verification Method *</label>
+                <select id="verifyMethod" class="form-select" required>
+                  <option value="PERSONAL_INFORMATION" selected>Personal Information & Verbal Clues</option>
+                  <option value="DOCUMENT">Government ID Document</option>
+                  <option value="FAMILY_CONFIRMATION">Family Member Verbal Confirmation</option>
+                  <option value="DINDI_CONFIRMATION">Dindi Leader Confirmation</option>
+                  <option value="POLICE_VERIFICATION">Police Control Verification</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="verifyNotes">Verification Notes *</label>
+                <textarea id="verifyNotes" class="form-control" rows="3" placeholder="Provide notes on how identity was confirmed..." required></textarea>
+              </div>
+
+              <div class="d-flex justify-between align-center" style="margin-top: 1.75rem;">
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Confirm Identity Verification</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function handleVerificationSubmit(e) {
+      e.preventDefault();
+      const urlParams = new URLSearchParams(window.location.search);
+      const caseId = urlParams.get('case_id');
+
+      const payload = {
+        verification_status: document.getElementById('verifyStatus').value,
+        verification_method: document.getElementById('verifyMethod').value,
+        verification_notes: document.getElementById('verifyNotes').value.trim()
+      };
+
+      const res = await APIClient.post(`/api/found-person/cases/${caseId}/verification`, payload);
+      if (res.success) {
+        Auth.showToast('Identity verification recorded successfully!', 'success');
+        setTimeout(() => {
+          window.location.href = `/found-person/found-person-case-details.html?case_id=${caseId}`;
+        }, 800);
+      } else {
+        Auth.showToast(res.message, 'error');
+      }
+    }
+  </script>
+</body>
+</html>

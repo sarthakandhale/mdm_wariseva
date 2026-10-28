@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emergency Case Details – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚑</div>
+          <div class="brand-text">Wari<span>Seva</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item"><a href="../medical/my-medical-cases.html">← Back to My Cases</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Medical Emergency Case Details</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div style="max-width: 900px; margin: 0 auto;" id="caseDetailsView">
+          <!-- Loaded dynamically -->
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function loadCaseDetails() {
+      const container = document.getElementById('caseDetailsView');
+      const urlParams = new URLSearchParams(window.location.search);
+      const caseId = urlParams.get('case_id');
+
+      if (!caseId) {
+        container.innerHTML = `<div class="glass-card" style="padding:2rem;">No Case ID specified.</div>`;
+        return;
+      }
+
+      container.innerHTML = `<div class="glass-card" style="padding:2rem;text-align:center;">Loading case details...</div>`;
+
+      const res = await APIClient.get(`/api/medical/cases/${caseId}`);
+      if (!res.success) {
+        container.innerHTML = `<div class="glass-card" style="padding:2rem;color:var(--color-accent-crimson);">${res.message}</div>`;
+        return;
+      }
+
+      const c = res.data;
+      const p = c.patient || {};
+      const l = c.location || {};
+      const ambs = c.ambulance_assignments || [];
+      const history = c.timeline || [];
+
+      container.innerHTML = `
+        <!-- Case Header -->
+        <div class="glass-card" style="padding:2rem; margin-bottom:1.5rem; border-left:5px solid ${c.priority_level === 'CRITICAL' ? 'var(--color-accent-crimson)' : 'var(--color-accent-gold)'};">
+          <div class="d-flex justify-between align-center" style="flex-wrap:wrap;gap:1rem;">
+            <div>
+              <div class="d-flex align-center gap-2">
+                <h2 style="font-size:1.6rem;">Case #${c.case_number}</h2>
+                <span class="badge ${c.priority_level === 'CRITICAL' ? 'badge-rejected' : 'badge-pending'}">${c.priority_level} (Score: ${c.priority_score})</span>
+                <span class="badge badge-active">${c.status}</span>
+              </div>
+              <div style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.4rem;">
+                Reported by: <strong>${c.reporter_name}</strong> (${c.reporter_mobile}) | Category: <strong>${c.emergency_type}</strong>
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-danger btn-sm" onclick="requestAmbulanceForCase(${c.id})">🚑 Request Ambulance</button>
+              <a href="../medical/my-medical-cases.html" class="btn btn-secondary btn-sm">← Back</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Details Grid -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
+          
+          <!-- Patient Info -->
+          <div class="glass-card" style="padding:1.5rem;">
+            <h3 style="margin-bottom:1rem; border-bottom:1px solid var(--bg-card-border); padding-bottom:0.5rem;">Patient Details</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; font-size:0.9rem;">
+              <div><span style="color:var(--text-muted)">Name:</span> <strong>${p.full_name || 'N/A'}</strong></div>
+              <div><span style="color:var(--text-muted)">Age / Gender:</span> <strong>${p.calculated_age || 'N/A'} yrs / ${p.gender || 'N/A'}</strong></div>
+              <div><span style="color:var(--text-muted)">Patient Code:</span> <strong>${p.person_code || p.temp_patient_code || 'TEMP'}</strong></div>
+              <div><span style="color:var(--text-muted)">Patient Type:</span> <strong>${p.is_temporary ? 'Unidentified Victim' : 'Registered Pilgrim'}</strong></div>
+            </div>
+          </div>
+
+          <!-- Location Info -->
+          <div class="glass-card" style="padding:1.5rem;">
+            <h3 style="margin-bottom:1rem; border-bottom:1px solid var(--bg-card-border); padding-bottom:0.5rem;">Location & Zone</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; font-size:0.9rem;">
+              <div><span style="color:var(--text-muted)">Zone:</span> <strong>${l.zone || 'N/A'}</strong></div>
+              <div><span style="color:var(--text-muted)">Landmark:</span> <strong>${l.landmark || 'N/A'}</strong></div>
+              <div style="grid-column:span 2;"><span style="color:var(--text-muted)">Route:</span> <strong>${l.route || 'Alandi-Pandharpur Route'}</strong></div>
+              <div style="grid-column:span 2;"><span style="color:var(--text-muted)">GPS Coordinates:</span> <strong>${l.latitude ? `${l.latitude}, ${l.longitude}` : 'Not captured'}</strong></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Priority Reasons -->
+        <div class="glass-card" style="padding:1.5rem; margin-bottom:1.5rem; border-top:3px solid var(--color-accent-gold);">
+          <h3>🧠 Priority Calculation Breakdown</h3>
+          <p style="color:var(--color-accent-gold); font-size:0.875rem; margin-top:0.4rem;">${c.priority_reasons}</p>
+        </div>
+
+        <!-- Ambulance Dispatches -->
+        <div class="glass-card" style="padding:1.5rem; margin-bottom:1.5rem;">
+          <h3>🚑 Ambulance Response Tracking</h3>
+          ${ambs.length === 0 ? `<div style="color:var(--text-muted);margin-top:0.5rem;">No ambulance currently dispatched. Click <strong>Request Ambulance</strong> to dispatch.</div>` : ambs.map(a => `
+            <div style="padding:1rem; background:rgba(255,255,255,0.03); border-radius:var(--radius-sm); margin-top:0.75rem;">
+              <div class="d-flex justify-between align-center">
+                <div>
+                  <strong>Ambulance Code: ${a.ambulance_code}</strong> (${a.registration_number})
+                  <div style="font-size:0.85rem; color:var(--text-secondary);">Driver: <strong>${a.driver_name}</strong> (${a.driver_contact})</div>
+                </div>
+                <span class="badge badge-active">${a.status}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- Case Timeline -->
+        <div class="glass-card" style="padding:1.5rem;">
+          <h3>⏱️ Status & Audit Timeline</h3>
+          <div style="margin-top:1rem; display:flex; flex-direction:column; gap:0.5rem;">
+            ${history.map(h => `
+              <div style="padding:0.6rem 1rem; background:rgba(15,23,42,0.6); border-radius:var(--radius-sm); font-size:0.85rem;" class="d-flex justify-between align-center">
+                <div>Status changed to <strong style="color:var(--color-accent-gold);">${h.new_status}</strong> (${h.reason || 'Update'})</div>
+                <div style="color:var(--text-muted); font-size:0.75rem;">${h.created_at}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    async function requestAmbulanceForCase(caseId) {
+      const res = await APIClient.post(`/api/medical/cases/${caseId}/ambulance`, {});
+      if (res.success) {
+        Auth.showToast(res.message, 'success');
+        loadCaseDetails();
+      } else {
+        Auth.showToast(res.message, 'error');
+      }
+    }
+
+    loadCaseDetails();
+  </script>
+</body>
+</html>

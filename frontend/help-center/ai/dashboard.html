@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help Center AI Match Console – WariSeva</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Help<span>AI</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../../help-center/ai/dashboard.html">🚩 Help Center AI Workbench</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Help Center Operator AI Match Desk</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div style="background:rgba(234,179,8,0.15); border:1px solid var(--color-accent-gold); color:var(--color-accent-gold); padding:0.85rem 1.25rem; border-radius:var(--radius-md); margin-bottom:1.5rem; font-weight:600; font-size:0.9rem;">
+          ⚠️ <strong>DECISION SUPPORT NOTICE:</strong> AI outputs candidate recommendations (`Potential Match`). Verification by authorized operators is required before family contact.
+        </div>
+
+        <div id="aiDashboardMetrics" style="margin-bottom:1.75rem;"></div>
+
+        <div class="glass-card" style="padding:1.75rem;">
+          <h2 style="font-size:1.3rem; margin-bottom:1.25rem;">Candidate Pairs Pending Desk Review</h2>
+          <div style="overflow-x:auto;">
+            <table class="table" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr style="text-align:left; border-bottom:1px solid var(--bg-card-border);">
+                  <th style="padding:0.75rem;">Type</th>
+                  <th style="padding:0.75rem;">Cases Compared</th>
+                  <th style="padding:0.75rem;">Match Score</th>
+                  <th style="padding:0.75rem;">Status</th>
+                  <th style="padding:0.75rem;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="aiRecentMatchesBody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/ai-matching.js"></script>
+  <script>
+    Auth.requireAuth();
+  </script>
+</body>
+</html>

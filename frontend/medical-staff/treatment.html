@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Record Medical Treatment – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🩺</div>
+          <div class="brand-text">Wari<span>Medical</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item"><a href="../medical-staff/dashboard.html">← Back to Triage Console</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Record Patient Treatment & Clinical Notes</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div style="max-width: 780px; margin: 0 auto;">
+          <div class="glass-card" style="padding: 2.25rem;">
+            <div class="d-flex justify-between align-center" style="margin-bottom:1rem;">
+              <h2 style="font-size: 1.4rem;" id="treatmentHeaderTitle">Record Patient Treatment</h2>
+              <span class="badge badge-pending">CONFIDENTIAL CLINICAL RECORD</span>
+            </div>
+            <p style="color:var(--text-secondary); font-size:0.875rem; margin-bottom:1.5rem;">
+              Clinical assessment and medication details are restricted to authorized medical staff and logged in security audit trails.
+            </p>
+
+            <form id="treatmentForm" onsubmit="handleTreatmentSubmit(event)">
+              <div class="form-group">
+                <label class="form-label" for="assessInput">Initial Assessment / Diagnosis *</label>
+                <textarea id="assessInput" class="form-control" rows="3" placeholder="e.g. Severe dehydration, heat stroke, blood pressure 150/90" required></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="treatInput">Treatment Provided *</label>
+                <textarea id="treatInput" class="form-control" rows="3" placeholder="e.g. Administered 1L Normal Saline IV fluid, oxygen therapy at 4L/min" required></textarea>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="medInput">Medication Prescribed</label>
+                  <input type="text" id="medInput" class="form-control" placeholder="e.g. ORS solution, Paracetamol 500mg">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="obsInput">Clinical Observation Notes</label>
+                  <input type="text" id="obsInput" class="form-control" placeholder="e.g. Vital signs stabilized, resting under observation">
+                </div>
+              </div>
+
+              <div class="d-flex justify-between align-center" style="margin-top: 1.75rem;">
+                <a href="../medical-staff/dashboard.html" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-success" style="padding:0.8rem 2rem;">Save Clinical Treatment Record</button>
+              </div>
+            </form>
+
+            <hr style="border-color:var(--bg-card-border); margin: 2rem 0;">
+
+            <!-- Referral Option -->
+            <h3>Hospital Referral Option</h3>
+            <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:1rem;">
+              If medical camp capacity is exceeded or specialized hospital treatment is needed, initiate a referral.
+            </p>
+            <form id="referralForm" onsubmit="handleReferralSubmit(event)">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="refHospital">Target Hospital Name *</label>
+                  <input type="text" id="refHospital" class="form-control" placeholder="e.g. Saswad District Hospital or Pandharpur Civil Hospital" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="refReason">Referral Reason *</label>
+                  <input type="text" id="refReason" class="form-control" placeholder="e.g. Cardiac monitoring required" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label><input type="checkbox" id="refAmbReq" checked> Require Advanced Life Support Ambulance Transfer</label>
+              </div>
+              <button type="submit" class="btn btn-danger">Refer Patient to Hospital</button>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function handleTreatmentSubmit(e) {
+      e.preventDefault();
+      const urlParams = new URLSearchParams(window.location.search);
+      const caseId = urlParams.get('case_id');
+
+      const payload = {
+        assessment: document.getElementById('assessInput').value.trim(),
+        treatment_provided: document.getElementById('treatInput').value.trim(),
+        medication: document.getElementById('medInput').value.trim(),
+        observation: document.getElementById('obsInput').value.trim()
+      };
+
+      const res = await APIClient.post(`/api/medical/cases/${caseId}/treatment`, payload);
+      if (res.success) {
+        Auth.showToast('Clinical treatment record saved successfully!', 'success');
+        setTimeout(() => {
+          window.location.href = `/medical-staff/dashboard.html`;
+        }, 800);
+      } else {
+        Auth.showToast(res.message, 'error');
+      }
+    }
+
+    async function handleReferralSubmit(e) {
+      e.preventDefault();
+      const urlParams = new URLSearchParams(window.location.search);
+      const caseId = urlParams.get('case_id');
+
+      const payload = {
+        to_facility_name: document.getElementById('refHospital').value.trim(),
+        reason: document.getElementById('refReason').value.trim(),
+        ambulance_required: document.getElementById('refAmbReq').checked
+      };
+
+      const res = await APIClient.post(`/api/medical/cases/${caseId}/referral`, payload);
+      if (res.success) {
+        Auth.showToast('Hospital referral created successfully!', 'success');
+        setTimeout(() => {
+          window.location.href = `/medical-staff/dashboard.html`;
+        }, 800);
+      } else {
+        Auth.showToast(res.message, 'error');
+      }
+    }
+  </script>
+</body>
+</html>

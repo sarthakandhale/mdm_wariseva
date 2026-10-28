@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Audit Logs – ReuniteAI</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Reunite<span>AI</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item"><a href="../admin/dashboard.html">📊 System Statistics</a></li>
+        <li class="sidebar-item"><a href="../admin/pending-users.html">⌛ Pending Approvals</a></li>
+        <li class="sidebar-item"><a href="../admin/users.html">👥 Users Directory</a></li>
+        <li class="sidebar-item active"><a href="../admin/audit-logs.html">📜 Security Audit Logs</a></li>
+        <li class="sidebar-item"><a href="../profile.html">👤 My Profile</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Security Audit Monitor & Event Logs</h3>
+        </div>
+        <div class="navbar-right">
+          <div class="user-profile-btn" onclick="window.location.href="../profile.html"">
+            <div class="avatar-circle" id="navUserAvatar">A</div>
+            <div>
+              <div id="navUserName" style="font-weight:600;font-size:0.875rem;">Administrator</div>
+              <div id="navUserRole" style="font-size:0.75rem;color:var(--color-accent-gold);">SUPER ADMIN</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <!-- Filter Header -->
+        <div class="glass-card d-flex align-center justify-between" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem;">
+          <div class="d-flex align-center gap-2">
+            <label class="form-label" style="margin:0;">Filter Action:</label>
+            <select id="filterAction" class="form-select" style="max-width:220px;" onchange="loadAuditLogs()">
+              <option value="">All Audit Actions</option>
+              <option value="REGISTER">REGISTER</option>
+              <option value="LOGIN">LOGIN</option>
+              <option value="LOGOUT">LOGOUT</option>
+              <option value="PROFILE_UPDATE">PROFILE_UPDATE</option>
+              <option value="USER_APPROVE">USER_APPROVE</option>
+              <option value="USER_REJECT">USER_REJECT</option>
+              <option value="USER_SUSPEND">USER_SUSPEND</option>
+              <option value="USER_BLOCK">USER_BLOCK</option>
+            </select>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="loadAuditLogs()">🔄 Refresh Logs</button>
+        </div>
+
+        <!-- Audit Table -->
+        <div class="glass-card table-responsive" id="auditLogsTable">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>User Identity / Role</th>
+                <th>Action Event</th>
+                <th>Action Details</th>
+                <th>IP Address</th>
+              </tr>
+            </thead>
+            <tbody id="auditLogsTableBody">
+              <!-- Dynamically Populated by dashboard.js -->
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/dashboard.js"></script>
+  <script>
+    Auth.requireAuth(['EVENT_ADMIN', 'SUPER_ADMIN']);
+  </script>
+</body>
+</html>

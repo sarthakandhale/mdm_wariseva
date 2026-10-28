@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help Desk Portal – ReuniteAI</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Reunite<span>AI</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../dashboard/help-center.html">🎧 Help Desk Overview</a></li>
+        <li class="sidebar-item"><a href="../lost-person/report-lost.html">🚨 File Missing Case</a></li>
+        <li class="sidebar-item"><a href="../found-person/report-found.html">📷 Register Found Person</a></li>
+        <li class="sidebar-item"><a href="../ai/person-matches.html">🤖 AI Person Biometric Search</a></li>
+        <li class="sidebar-item"><a href="../lost-items/report-lost-item.html">🎒 Report Lost Item</a></li>
+        <li class="sidebar-item"><a href="../found-items/report-found-item.html">📦 Register Found Item</a></li>
+        <li class="sidebar-item"><a href="../found-items/found-items.html">📜 Item Claims Desk</a></li>
+        <li class="sidebar-item"><a href="../medical/report-emergency.html">🏥 Medical Emergency Help</a></li>
+        <li class="sidebar-item"><a href="../map/wari-map.html">🗺️ Interactive Route Map</a></li>
+        <li class="sidebar-item"><a href="../profile.html">👤 My Profile</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Temple Kiosk & Public Assistance Help Desk</h3>
+        </div>
+        <div class="navbar-right">
+          <div class="user-profile-btn" onclick="window.location.href="../profile.html"">
+            <div class="avatar-circle" id="navUserAvatar">H</div>
+            <div>
+              <div id="navUserName" style="font-weight:600;font-size:0.875rem;">Sita Sharma</div>
+              <div id="navUserRole" style="font-size:0.75rem;color:var(--color-accent-gold);">HELP CENTER OPERATOR</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div class="stat-grid">
+          <div class="glass-card stat-card">
+            <div class="stat-header"><span>Walk-in Inquiries Today</span><div class="stat-icon">🎧</div></div>
+            <div class="stat-value">64</div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-header"><span>Active Missing Reports</span><div class="stat-icon">🚨</div></div>
+            <div class="stat-value">Logged</div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-header"><span>Found Persons Logged</span><div class="stat-icon">📷</div></div>
+            <div class="stat-value">Active</div>
+          </div>
+        </div>
+
+        <h3 style="margin-bottom: 1rem;">Help Desk Operations Workbench</h3>
+        <div class="placeholder-grid">
+          <div class="glass-card module-card">
+            <h4>🚨 On-Behalf Missing Person Filing</h4>
+            <p>Assist non-smartphone pilgrims at help booths to file missing person reports and generate physical tracking codes.</p>
+            <div style="margin-top:1rem;">
+              <a href="../lost-person/report-lost.html" class="btn btn-danger btn-sm">Report Missing Person</a>
+              <a href="../lost-person/my-lost-cases.html" class="btn btn-secondary btn-sm">View Directory</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>📷 Register Found Person / Child</h4>
+            <p>Register found child or elderly pilgrim brought to kiosk, record physical description, and trigger AI search.</p>
+            <div style="margin-top:1rem;">
+              <a href="../found-person/report-found.html" class="btn btn-success btn-sm">Register Found Person</a>
+              <a href="../found-person/found-person-cases.html" class="btn btn-secondary btn-sm">View Directory</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🤖 AI Biometric Matcher Desk</h4>
+            <p>Compare reported missing cases with safe custody found person profiles using weighted AI confidence scoring.</p>
+            <div style="margin-top:1rem;">
+              <a href="../ai/person-matches.html" class="btn btn-primary btn-sm">Open Person Matcher</a>
+              <a href="../ai/dashboard.html" class="btn btn-secondary btn-sm">AI Dashboard</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🎒 Lost & Found Item Kiosk</h4>
+            <p>File lost property reports or register items handed over at help desk, assign locker storage, and manage claims.</p>
+            <div style="margin-top:1rem;">
+              <a href="../lost-items/report-lost-item.html" class="btn btn-primary btn-sm">Report Lost Item</a>
+              <a href="../found-items/report-found-item.html" class="btn btn-secondary btn-sm">Register Found Item</a>
+              <a href="../found-items/found-items.html" class="btn btn-warning btn-sm" style="margin-top:0.5rem;display:inline-block;">Item Claims Desk</a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>Auth.requireAuth(['HELP_CENTER_OPERATOR', 'SUPER_ADMIN']);</script>
+</body>
+</html>

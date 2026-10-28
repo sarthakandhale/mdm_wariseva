@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parent Portal – ReuniteAI</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Reunite<span>AI</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../dashboard/parent.html">🏠 Portal Overview</a></li>
+        <li class="sidebar-item"><a href="../family/family-dashboard.html">👨‍👩‍👧 My Family Group</a></li>
+        <li class="sidebar-item"><a href="../person/add-person.html">➕ Register Person</a></li>
+        <li class="sidebar-item"><a href="../lost-person/report-lost.html">🚨 Report Missing Person</a></li>
+        <li class="sidebar-item"><a href="../lost-person/my-lost-cases.html">📋 My Missing Cases</a></li>
+        <li class="sidebar-item"><a href="../lost-items/report-lost-item.html">🎒 Report Lost Item</a></li>
+        <li class="sidebar-item"><a href="../lost-items/my-lost-items.html">📦 My Lost Items</a></li>
+        <li class="sidebar-item"><a href="../medical/report-emergency.html">🏥 Medical Emergency</a></li>
+        <li class="sidebar-item"><a href="../map/wari-map.html">🗺️ Interactive Route Map</a></li>
+        <li class="sidebar-item"><a href="../profile.html">👤 My Profile</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Parent & Guardian Safety Portal</h3>
+        </div>
+        <div class="navbar-right">
+          <div class="user-profile-btn" onclick="window.location.href="../profile.html"">
+            <div class="avatar-circle" id="navUserAvatar">P</div>
+            <div>
+              <div id="navUserName" style="font-weight:600;font-size:0.875rem;">Parent User</div>
+              <div id="navUserRole" style="font-size:0.75rem;color:var(--text-secondary);">PARENT / GUARDIAN</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div class="stat-grid">
+          <div class="glass-card stat-card">
+            <div class="stat-header"><span>Registered Family Members</span><div class="stat-icon">👨‍👩‍👧</div></div>
+            <div class="stat-value" id="statFamilyCount">Active</div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-header"><span>Active Missing Reports</span><div class="stat-icon">⚠️</div></div>
+            <div class="stat-value" id="statMissingCount">Tracking</div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-header"><span>Lost Property Reports</span><div class="stat-icon">🎒</div></div>
+            <div class="stat-value" id="statItemCount">Active</div>
+          </div>
+        </div>
+
+        <h3 style="margin-bottom: 1rem;">Safety & Assistance Services</h3>
+        <div class="placeholder-grid">
+          <div class="glass-card module-card">
+            <h4>👨‍👩‍👧 My Family Members</h4>
+            <p>Pre-register family members with photos, physical descriptions, and emergency contacts before events.</p>
+            <div style="margin-top:1rem;">
+              <a href="../family/family-dashboard.html" class="btn btn-primary btn-sm">Manage Family</a>
+              <a href="../person/add-person.html" class="btn btn-secondary btn-sm">Add Person</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🚨 Report Missing Person</h4>
+            <p>File an instant missing report with last seen location, clothing description, and trigger broadcast to control room.</p>
+            <div style="margin-top:1rem;">
+              <a href="../lost-person/report-lost.html" class="btn btn-danger btn-sm">Report Missing Person</a>
+              <a href="../lost-person/my-lost-cases.html" class="btn btn-secondary btn-sm">View My Cases</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🎒 Lost Item Assistance</h4>
+            <p>Report lost valuables, wallets, identity cards, or phones with IMEI / serial verification.</p>
+            <div style="margin-top:1rem;">
+              <a href="../lost-items/report-lost-item.html" class="btn btn-primary btn-sm">Report Lost Item</a>
+              <a href="../lost-items/my-lost-items.html" class="btn btn-secondary btn-sm">View My Items</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🏥 Medical Emergency</h4>
+            <p>Request emergency medical triage, medical tent guidance, or ambulance dispatch along the event route.</p>
+            <div style="margin-top:1rem;">
+              <a href="../medical/report-emergency.html" class="btn btn-warning btn-sm">Report Emergency</a>
+              <a href="../medical/nearby-medical-help.html" class="btn btn-secondary btn-sm">Find Medical Tents</a>
+            </div>
+          </div>
+
+          <div class="glass-card module-card">
+            <h4>🗺️ Live Route & Service Map</h4>
+            <p>Interactive OpenStreetMap view of help desks, police posts, medical camps, and Dindi processions.</p>
+            <div style="margin-top:1rem;">
+              <a href="../map/wari-map.html" class="btn btn-primary btn-sm">Open Live Map</a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>Auth.requireAuth(['PARENT_GUARDIAN', 'SUPER_ADMIN']);</script>
+</body>
+</html>

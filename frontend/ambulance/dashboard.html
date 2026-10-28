@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ambulance Dispatch Console – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚑</div>
+          <div class="brand-text">Wari<span>Ambulance</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active"><a href="../ambulance/dashboard.html">🚑 Dispatch Console</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Ambulance Fleet & Dispatch Control Console</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content" id="ambulanceDashboardContainer">
+        <div class="glass-card" style="padding: 2rem;">
+          <h2 style="font-size: 1.4rem; margin-bottom: 1.25rem;">Active Ambulances along Alandi–Pandharpur Route</h2>
+          
+          <div id="ambulanceCardsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function loadAmbulanceDashboard() {
+      const container = document.getElementById('ambulanceCardsGrid');
+      if (!container) return;
+
+      container.innerHTML = `<div style="grid-column: 1 / -1; padding: 2rem; text-align: center;">Loading ambulance fleet status...</div>`;
+
+      const res = await APIClient.get('/api/medical/ambulances');
+      if (res.success) {
+        const ambs = res.data;
+        container.innerHTML = ambs.map(a => `
+          <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--bg-card-border); border-radius: var(--radius-md); padding: 1.25rem; border-top: 3px solid var(--color-accent-emerald);">
+            <div class="d-flex justify-between align-center" style="margin-bottom:0.75rem;">
+              <h3 style="font-size:1.1rem; font-family:monospace;">${a.ambulance_code}</h3>
+              <span class="badge badge-active">${a.status}</span>
+            </div>
+            <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:0.75rem;">
+              Registration: <strong>${a.registration_number}</strong><br>
+              Driver: <strong>${a.driver_name}</strong> (${a.driver_contact})<br>
+              Type: <strong>${a.ambulance_type}</strong>
+            </div>
+            <div style="font-size:0.78rem; color:var(--text-muted); padding:0.5rem; background:rgba(255,255,255,0.03); border-radius:var(--radius-sm);">
+              Equipment: ${a.equipment_description || 'Standard Medical Kit'}
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    loadAmbulanceDashboard();
+  </script>
+</body>
+</html>

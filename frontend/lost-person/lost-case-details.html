@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Missing Case Details – WariSeva</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon">🚩</div>
+          <div class="brand-text">Wari<span>Seva</span></div>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item"><a href="../lost-person/my-lost-cases.html">← Back to My Cases</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="Auth.logout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h3>Missing Person Case Details</h3>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div style="max-width: 900px; margin: 0 auto;" id="lostCaseDetailsView">
+          <!-- Dynamically loaded -->
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    Auth.requireAuth();
+
+    async function loadLostCaseDetailsPage() {
+      const container = document.getElementById('lostCaseDetailsView');
+      const urlParams = new URLSearchParams(window.location.search);
+      const caseId = urlParams.get('case_id');
+
+      if (!caseId) {
+        container.innerHTML = `<div class="glass-card" style="padding:2rem;">No Case ID specified.</div>`;
+        return;
+      }
+
+      container.innerHTML = `<div class="glass-card" style="padding:2rem;text-align:center;">Loading missing case details...</div>`;
+
+      const res = await APIClient.get(`/api/lost-person/cases/${caseId}`);
+      if (!res.success) {
+        container.innerHTML = `<div class="glass-card" style="padding:2rem;color:var(--color-accent-crimson);">${res.message}</div>`;
+        return;
+      }
+
+      const c = res.data;
+      const p = c.person || {};
+      const l = c.location || {};
+      const cl = c.clothing || {};
+      const notes = c.notes || [];
+      const sightings = c.sightings || [];
+      const history = c.timeline || [];
+
+      container.innerHTML = `
+        <!-- Case Header -->
+        <div class="glass-card" style="padding:2rem; margin-bottom:1.5rem; border-left:5px solid ${c.priority_level === 'CRITICAL' ? 'var(--color-accent-crimson)' : 'var(--color-accent-gold)'};">
+          <div class="d-flex justify-between align-center" style="flex-wrap:wrap;gap:1rem;">
+            <div>
+              <div class="d-flex align-center gap-2">
+                <h2 style="font-size:1.6rem;">Case #${c.case_number}</h2>
+                <span class="badge ${c.priority_level === 'CRITICAL' ? 'badge-rejected' : 'badge-pending'}">${c.priority_level} (Score: ${c.priority_score})</span>
+                <span class="badge badge-active">${c.status}</span>
+              </div>
+              <div style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.4rem;">
+                Reported by: <strong>${c.reporter_name}</strong> (${c.reporter_mobile}) | Reporter Rel: <strong>${c.reporter_relationship}</strong>
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <a href="../lost-person/report-sighting.html?case_id=${c.id}" class="btn btn-primary btn-sm">👁️ Report Sighting</a>
+              <button class="btn btn-secondary btn-sm" onclick="requestSearchSupport(${c.id})">🔍 Request Volunteer Search</button>
+              <a href="../lost-person/withdraw-case.html?case_id=${c.id}" class="btn btn-danger btn-sm">Withdraw</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Details Grid -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
+          
+          <!-- Person Info -->
+          <div class="glass-card" style="padding:1.5rem;">
+            <h3 style="margin-bottom:1rem; border-bottom:1px solid var(--bg-card-border); padding-bottom:0.5rem;">Missing Person Details</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; font-size:0.9rem;">
+              <div><span style="color:var(--text-muted)">Full Name:</span> <strong>${p.full_name || 'N/A'}</strong></div>
+              <div><span style="color:var(--text-muted)">Age / Gender:</span> <strong>${p.calculated_age || 'N/A'} yrs / ${p.gender || 'N/A'}</strong></div>
+              <div><span style="color:var(--text-muted)">Person Code:</span> <strong>${p.person_code || p.temp_person_code || 'TEMP'}</strong></div>
+              <div><span style="color:var(--text-muted)">Category:</span> <strong>${p.age_category || 'PILGRIM'}</strong></div>
+            </div>
+          </div>
+
+          <!-- Last Seen Location & Clothing -->
+          <div class="glass-card" style="padding:1.5rem;">
+            <h3 style="margin-bottom:1rem; border-bottom:1px solid var(--bg-card-border); padding-bottom:0.5rem;">Last Seen Location & Clothing</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; font-size:0.9rem;">
+              <div><span style="color:var(--text-muted)">Zone:</span> <strong>${l.zone || 'N/A'}</strong></div>
+              <div><span style="color:var(--text-muted)">Landmark:</span> <strong>${l.landmark || 'N/A'}</strong></div>
+              <div style="grid-column:span 2;"><span style="color:var(--text-muted)">Last Seen Time:</span> <strong>${c.last_seen_at}</strong></div>
+              <div style="grid-column:span 2;"><span style="color:var(--text-muted)">Top Wear:</span> <strong>${cl.top_color || ''} ${cl.top_type || 'N/A'}</strong></div>
+              <div style="grid-column:span 2;"><span style="color:var(--text-muted)">Bottom Wear:</span> <strong>${cl.bottom_color || ''} ${cl.bottom_type || 'N/A'}</strong></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Case Notes -->
+        <div class="glass-card" style="padding:1.5rem; margin-bottom:1.5rem;">
+          <h3 style="margin-bottom:1rem;">📝 Case Activity Notes</h3>
+          ${notes.length === 0 ? `<div style="color:var(--text-muted);">No notes added yet.</div>` : notes.map(n => `
+            <div style="padding:0.75rem; background:rgba(255,255,255,0.03); border-radius:var(--radius-sm); margin-bottom:0.5rem;">
+              <div style="font-weight:700;">${n.author_name} <span class="badge badge-active" style="font-size:0.7rem;">${n.visibility}</span></div>
+              <div style="font-size:0.875rem; margin-top:0.25rem;">${n.note}</div>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- Reported Sightings -->
+        <div class="glass-card" style="padding:1.5rem; margin-bottom:1.5rem;">
+          <h3 style="margin-bottom:1rem;">👁️ Reported Sightings</h3>
+          ${sightings.length === 0 ? `<div style="color:var(--text-muted);">No sightings reported yet.</div>` : sightings.map(s => `
+            <div style="padding:0.75rem; background:rgba(255,255,255,0.03); border-radius:var(--radius-sm); margin-bottom:0.5rem;">
+              <div style="font-weight:700;">Observed by ${s.observer_name} (${s.observer_mobile})</div>
+              <div style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.2rem;">Location: <strong>${s.zone}</strong> (${s.location_description})</div>
+              <div style="font-size:0.85rem; margin-top:0.25rem;">"${s.description || 'Spotted pilgrim walking near halt'}"</div>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- Case Timeline -->
+        <div class="glass-card" style="padding:1.5rem;">
+          <h3>⏱️ Status & Audit Timeline</h3>
+          <div style="margin-top:1rem; display:flex; flex-direction:column; gap:0.5rem;">
+            ${history.map(h => `
+              <div style="padding:0.6rem 1rem; background:rgba(15,23,42,0.6); border-radius:var(--radius-sm); font-size:0.85rem;" class="d-flex justify-between align-center">
+                <div>Status changed to <strong style="color:var(--color-accent-gold);">${h.new_status}</strong> (${h.reason || 'Update'})</div>
+                <div style="color:var(--text-muted); font-size:0.75rem;">${h.created_at}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    async function requestSearchSupport(caseId) {
+      const res = await APIClient.post(`/api/lost-person/cases/${caseId}/search-request`, {});
+      if (res.success) {
+        Auth.showToast('Volunteer search support requested!', 'success');
+        loadLostCaseDetailsPage();
+      } else {
+        Auth.showToast(res.message, 'error');
+      }
+    }
+
+    loadLostCaseDetailsPage();
+  </script>
+</body>
+</html>
